@@ -24,4 +24,16 @@
     <content><![CDATA[<p>This is a test.</p>
 ]]></content>
   </entry>
+  <entry>
+    <title>how-to-set-a-personal-blog-with-hexo</title>
+    <url>/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</url>
+    <content><![CDATA[<p>#<font face="宋体" color=black size=3>前言</font><br><font face="宋体" color=black size=4><br>&emsp;我主要参考下面的内容依据hexo来搭建githubpages，并且用next主题优化。<br></font><br>#<font face="Times New Roman" color=black size=3>Reference</font><br><font face="Times New Roman" color=black size=4><br><a href="https://blog.csdn.net/weixin_39345384/article/details/80095883" target="_blank" rel="noopener">Windows下通过GitHub+Hexo搭建个人博客的步骤</a><br><a href="https://blog.csdn.net/weixin_39345384/article/details/80785373" target="_blank" rel="noopener">Hexo框架下用NexT(v7.0+)主题美化博客</a><br><a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">Markdown 教程</a><br><a href="https://www.runoob.com/w3cnote/git-guide.html" target="_blank" rel="noopener">Github 简明教程</a><br>[Git 教程](Git 教程)<br></font></p>
+]]></content>
+      <categories>
+        <category>tools</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
 </search>
