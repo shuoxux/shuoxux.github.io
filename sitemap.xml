@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://yoursite.com/2020/06/22/how-to-write-papers-with-markdown/</loc>
+    
+    <lastmod>2020-06-22T02:17:29.455Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</loc>
+    
+    <lastmod>2020-06-22T02:16:51.150Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/categories/index.html</loc>
+    
+    <lastmod>2020-06-22T00:45:33.252Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/tags/index.html</loc>
+    
+    <lastmod>2020-06-22T00:28:33.278Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/06/21/hello-world/</loc>
+    
+    <lastmod>2020-06-21T13:58:52.033Z</lastmod>
+    
+  </url>
+  
+</urlset>
