@@ -15,20 +15,6 @@
       </tags>
   </entry>
   <entry>
-    <title>How to Write Papers with Markdown</title>
-    <url>/2020/06/22/how-to-write-papers-with-markdown/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用markdown来写论文的一些方法，还不完善等待补充。</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.jianshu.com/p/b0ac7ae98100" target="_blank" rel="noopener">如何用Markdown写论文？</a></p>
-]]></content>
-      <categories>
-        <category>tools</category>
-      </categories>
-      <tags>
-        <tag>papers</tag>
-        <tag>markdown</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>How to Use Mendeley</title>
     <url>/2020/06/22/how-to-use-mendeley/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用mendeley来写论文的一些方法。</p>
@@ -38,8 +24,22 @@
         <category>tools</category>
       </categories>
       <tags>
-        <tag>papers</tag>
         <tag>mendeley</tag>
+        <tag>papers</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to Write Papers with Markdown</title>
+    <url>/2020/06/22/how-to-write-papers-with-markdown/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用markdown来写论文的一些方法，还不完善等待补充。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.jianshu.com/p/b0ac7ae98100" target="_blank" rel="noopener">如何用Markdown写论文？</a></p>
+]]></content>
+      <categories>
+        <category>tools</category>
+      </categories>
+      <tags>
+        <tag>markdown</tag>
+        <tag>papers</tag>
       </tags>
   </entry>
 </search>
