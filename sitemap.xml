@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://shuoxux.github.io/tags/index.html</loc>
+    
+    <lastmod>2020-09-28T14:10:31.156Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://shuoxux.github.io/2020/09/28/Markdown%E8%AF%AD%E6%B3%95/</loc>
     
     <lastmod>2020-09-28T14:00:46.212Z</lastmod>
@@ -47,13 +54,6 @@
     <loc>https://shuoxux.github.io/categories/index.html</loc>
     
     <lastmod>2020-06-22T00:45:33.252Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://shuoxux.github.io/tags/index.html</loc>
-    
-    <lastmod>2020-06-22T00:28:33.278Z</lastmod>
     
   </url>
   
