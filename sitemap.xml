@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://shuoxux.github.io/tags/index.html</loc>
+    <loc>https://shuoxux.github.io/2020/09/28/Markdown%E8%AF%AD%E6%B3%95/</loc>
     
-    <lastmod>2020-09-28T14:10:31.156Z</lastmod>
+    <lastmod>2020-09-29T01:34:51.911Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://shuoxux.github.io/2020/09/28/Markdown%E8%AF%AD%E6%B3%95/</loc>
+    <loc>https://shuoxux.github.io/2020/09/28/MachineLearning/</loc>
     
-    <lastmod>2020-09-28T14:00:46.212Z</lastmod>
+    <lastmod>2020-09-29T01:32:29.662Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/tags/index.html</loc>
+    
+    <lastmod>2020-09-28T14:10:31.156Z</lastmod>
     
   </url>
   
@@ -40,13 +47,6 @@
     <loc>https://shuoxux.github.io/2020/09/28/KnowledgeList/</loc>
     
     <lastmod>2020-09-28T12:15:24.054Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://shuoxux.github.io/2020/09/28/MachineLearning/</loc>
-    
-    <lastmod>2020-09-28T12:05:03.224Z</lastmod>
     
   </url>
   
