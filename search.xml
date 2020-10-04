@@ -55,7 +55,8 @@
 <p>1: <span class="math inline">\(\boldsymbol{for}\ t=1,2,...,T\ \boldsymbol{do}\)</span></p>
 <p>2:  <span class="math inline">\(h_t=\mathfrak{L}(D,\mathcal{D}_{bs})\)</span></p>
 <p>3: <span class="math inline">\(\boldsymbol{end\ for}\)</span></p>
-<p>输出：<span class="math inline">\(H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)\)</span> ***</p>
+<p>输出：<span class="math inline">\(H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)\)</span></p>
+<hr />
 </blockquote>
 <p><span class="math display">\[Bagging算法\]</span></p>
 <p>Bagging能不经修改地用于多分类、回归任务。</p>
