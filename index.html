@@ -294,7 +294,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-10-04 11:13:02 / Modified: 19:30:21" itemprop="dateCreated datePublished" datetime="2020-10-04T11:13:02+08:00">2020-10-04</time>
+              <time title="Created: 2020-10-04 11:13:02 / Modified: 19:34:25" itemprop="dateCreated datePublished" datetime="2020-10-04T11:13:02+08:00">2020-10-04</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -334,12 +334,16 @@
           <h2 id="前言">前言</h2>
 <p>    本篇是周志华西瓜书机器学习笔记，第八章集成学习。</p>
 <h2 id="个体与集成">个体与集成</h2>
-<p>    集成学习通过构建并结合多个学习器来完成学习任务。     集成学习的一般结构是：先产生一组“个体学习器”(individual leaner)，再采用某种策略将他们结合起来。     集成学习通过将多个学习器进行结合，常可获得比单一学习器显著优越的学习性能，这对“弱学习器(weak leaner)”尤为明显。     根据个体学习器的生成方式，目前的集成学习方法大致可分为两类：个体学习器存在强依赖关系、必须串行生成的序列化方法(代表是Boosting);个体学习器间不存在强依赖关系、可同时生成的并行化方法(代表是Bagging和“随机森林”(Random Forest))</p>
+<p>    集成学习通过构建并结合多个学习器来完成学习任务。</p>
+<p>    集成学习的一般结构是：先产生一组“个体学习器”(individual leaner)，再采用某种策略将他们结合起来。</p>
+<p>    集成学习通过将多个学习器进行结合，常可获得比单一学习器显著优越的学习性能，这对“弱学习器(weak leaner)”尤为明显。</p>
+<p>    根据个体学习器的生成方式，目前的集成学习方法大致可分为两类：个体学习器存在强依赖关系、必须串行生成的序列化方法(代表是Boosting);个体学习器间不存在强依赖关系、可同时生成的并行化方法(代表是Bagging和“随机森林”(Random Forest))</p>
 <h2 id="boosting">Boosting</h2>
-<p>    Boosting是一族可将弱学习器提升为强学习器的算法。算法机制：先从初始训练集训练出一个基学习器，再根据基学习器的表现对训练样本分布进行调整，使得先前样本在后续受到更多关注，然后基于调整后的样本分布来训练下一个基学习器；如此重复进行，直至基学习器数目达到事先制定的值T，最终将这T个额基学习器进行加权结合。     标准AdaBoost算法适用于二分类任务，有多种推导方式，容易理解的是基于“加性模型”来最小化指数损失函数。</p>
+<p>    Boosting是一族可将弱学习器提升为强学习器的算法。算法机制：先从初始训练集训练出一个基学习器，再根据基学习器的表现对训练样本分布进行调整，使得先前样本在后续受到更多关注，然后基于调整后的样本分布来训练下一个基学习器；如此重复进行，直至基学习器数目达到事先制定的值T，最终将这T个额基学习器进行加权结合。</p>
+<p>    标准AdaBoost算法适用于二分类任务，有多种推导方式，容易理解的是基于“加性模型”来最小化指数损失函数。</p>
 <blockquote>
 <hr />
-<p>输入：训练集<span class="math inline">\(D=\left\{ (\boldsymbol x_2,y_2),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\right\}\)</span>       基学习算法       训练轮数<span class="math inline">\(T\)</span>.</p>
+<p>输入：训练集<span class="math inline">\(D=\left\{ (\boldsymbol x_2,y_2),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\right\}\)</span>       基学习算法<span class="math inline">\(\mathfrak{L}\)</span>       训练轮数<span class="math inline">\(T\)</span>.</p>
 <p>过程:</p>
 <p>1: <span class="math inline">\(\mathcal{D}=1/m\)</span>.</p>
 <p>2: <span class="math inline">\(\boldsymbol{for}\)</span> <span class="math inline">\(t = 1,2,...,T\)</span>$ $</p>
@@ -353,10 +357,25 @@
 </blockquote>
 <p><span class="math display">\[Adaoost算法\]</span></p>
 <h2 id="bagging与随机森林">Bagging与随机森林</h2>
-<p> Bagging是并行式集成学习最著名的代表，它直接基于自主采样法(boostrap sampling) &gt;<strong><em> &gt;输入：训练集<span class="math inline">\(D=\left\{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\right\}\)</span> &gt; &gt;      基学习算法 &gt; &gt;      训练轮数<span class="math inline">\(T\)</span>. &gt; &gt;过程: &gt; &gt;1: <span class="math inline">\(\boldsymbol{for}\ t=1,2,...,T\ \boldsymbol{do}\)</span> &gt; &gt;2:  <span class="math inline">\(h_t=\mathfrak{L}(D,\mathcal{D}_{bs})\)</span> &gt; &gt;3: <span class="math inline">\(\boldsymbol{end\ for}\)</span> &gt; &gt;输出：<span class="math inline">\(H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)\)</span> &gt;</em></strong></p>
-<p><span class="math display">\[Bagging算法\]</span> Bagging能不经修改地用于多分类、回归任务。 随机森林(Random Forest，简称RF)是Bagging的一个扩展变体。RF在以决策树为基学习器构建Bagging集成的基础上，进一步在决策树的训练过程中引入了随机属性的选择。 随机森林的训练效率通常优于Bagging，因为在个体决策的过程中，Bagging使用的是“确定型”决策树，在选择划分属性时要对所有节点的所有属性进行考察，而随机森林使用的“随机型”决策树则只需考察一个属性子集。</p>
+<p> Bagging是并行式集成学习最著名的代表，它直接基于自主采样法(boostrap sampling)</p>
+<blockquote>
+<hr />
+<p>输入：训练集<span class="math inline">\(D=\left\{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\right\}\)</span></p>
+<p>      基学习算法</p>
+<p>      训练轮数<span class="math inline">\(T\)</span>.</p>
+<p>过程:</p>
+<p>1: <span class="math inline">\(\boldsymbol{for}\ t=1,2,...,T\ \boldsymbol{do}\)</span></p>
+<p>2:  <span class="math inline">\(h_t=\mathfrak{L}(D,\mathcal{D}_{bs})\)</span></p>
+<p>3: <span class="math inline">\(\boldsymbol{end\ for}\)</span></p>
+<p>输出：<span class="math inline">\(H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)\)</span> ***</p>
+</blockquote>
+<p><span class="math display">\[Bagging算法\]</span></p>
+<p>Bagging能不经修改地用于多分类、回归任务。</p>
+<p>随机森林(Random Forest，简称RF)是Bagging的一个扩展变体。RF在以决策树为基学习器构建Bagging集成的基础上，进一步在决策树的训练过程中引入了随机属性的选择。</p>
+<p>随机森林的训练效率通常优于Bagging，因为在个体决策的过程中，Bagging使用的是“确定型”决策树，在选择划分属性时要对所有节点的所有属性进行考察，而随机森林使用的“随机型”决策树则只需考察一个属性子集。</p>
 <h2 id="结合策略">结合策略</h2>
-<p>平均法：简单平均法、加权平均法 投票法：绝对多数投票法、相对多数投票法、加权投票法</p>
+<p>平均法：简单平均法、加权平均法</p>
+<p>投票法：绝对多数投票法、相对多数投票法、加权投票法</p>
 <h2 id="reference">Reference</h2>
 <p>周志华，机器学习</p>
 
