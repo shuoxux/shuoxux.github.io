@@ -539,4 +539,17 @@ $$</code></pre><p>$$<br>\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix}<br>\
         <tag>Git</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Latex Math</title>
+    <url>/2020/10/04/LatexMath/</url>
+    <content><![CDATA[<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p>This article shows how to use latex to write math functions.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.latex-project.org/" target="_blank" rel="noopener">latex-project.org</a><br><a href="https://www.latex-project.org/help/documentation/amsldoc.pdf" target="_blank" rel="noopener">User’s Guide for the amsmath Package (Version 2.1)</a><br><a href="https://www.caam.rice.edu/~heinken/latex/symbols.pdf" target="_blank" rel="noopener">LATEX Mathematical Symbols</a><br><a href="https://en.wikibooks.org/wiki/LaTeX/Mathematics" target="_blank" rel="noopener">LaTeX/Mathematics</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Latex</tag>
+      </tags>
+  </entry>
 </search>
