@@ -13,29 +13,15 @@
       </tags>
   </entry>
   <entry>
-    <title>集成学习(Ensemble Learning)</title>
-    <url>/2020/10/04/EnsembleLearning/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&ensp;&ensp;&ensp;&ensp;本篇是周志华西瓜书机器学习笔记，第八章集成学习。</p>
-<h2 id="个体与集成"><a href="#个体与集成" class="headerlink" title="个体与集成"></a>个体与集成</h2><p>&ensp;&ensp;&ensp;&ensp;集成学习通过构建并结合多个学习器来完成学习任务。<br>&ensp;&ensp;&ensp;&ensp;集成学习的一般结构是：先产生一组“个体学习器”(individual leaner)，再采用某种策略将他们结合起来。<br>&ensp;&ensp;&ensp;&ensp;集成学习通过将多个学习器进行结合，常可获得比单一学习器显著优越的学习性能，这对“弱学习器(weak leaner)”尤为明显。<br>&ensp;&ensp;&ensp;&ensp;根据个体学习器的生成方式，目前的集成学习方法大致可分为两类：个体学习器存在强依赖关系、必须串行生成的序列化方法(代表是Boosting);个体学习器间不存在强依赖关系、可同时生成的并行化方法(代表是Bagging和“随机森林”(Random Forest))</p>
-<h2 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h2><p>&ensp;&ensp;&ensp;&ensp;Boosting是一族可将弱学习器提升为强学习器的算法。算法机制：先从初始训练集训练出一个基学习器，再根据基学习器的表现对训练样本分布进行调整，使得先前样本在后续受到更多关注，然后基于调整后的样本分布来训练下一个基学习器；如此重复进行，直至基学习器数目达到事先制定的值T，最终将这T个额基学习器进行加权结合。<br>&ensp;&ensp;&ensp;&ensp;标准AdaBoost算法适用于二分类任务，有多种推导方式，容易理解的是基于“加性模型”来最小化指数损失函数。</p>
-<blockquote>
-<hr>
-<p>输入：训练集$D=\left{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),…,(\boldsymbol x_m,y_m)\right}$<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;基学习算法<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;训练轮数$T$.<br>过程：<br>1: $\mathcal{D}=1/m$.<br>2: $\boldsymbol{for}$ $t = 1,2,…,T$$ \boldsymbol{do}$<br>3:&ensp;&ensp;$h_t=\mathfrak{L}(D,\mathcal{D}_t);$<br>4:&ensp;&ensp;$\epsilon=P_{\boldsymbol{x}\sim\mathcal{D}}(h_t(\boldsymbol{x})\not ={f(\boldsymbol{x})})$;<br>5:&ensp;&ensp;$\boldsymbol{if}\ \epsilon_t&gt;0.5\ \boldsymbol{then\ break}$<br>6:&emsp;$\alpha_t=\frac{1}{2}ln(\frac{1-\epsilon_t}{\epsilon_t})$;<br>7:&emsp;$\mathcal{D}_{t+1}(\boldsymbol{x})=\frac{\mathcal{D}_t(\boldsymbol{x})}{Z_t}\times<br>  \begin{cases}<br>    exp(-\alpha_t)       &amp; \quad \text{if } h_t(\boldsymbol{x})=f(\boldsymbol{x}) \<br>    exp(\alpha_t)  &amp; \quad \text{if }  h_t(\boldsymbol{x})\not=f(\boldsymbol{x})<br>  \end{cases}$<br>8: $\boldsymbol{end\ for}$<br>输出：$H(\boldsymbol{x})=sign\big(\sum^T_{t=1}\alpha_th_t(\boldsymbol{x})\big)$</p>
-<hr>
-<script type="math/tex; mode=display">Adaoost算法</script><h2 id="Bagging与随机森林"><a href="#Bagging与随机森林" class="headerlink" title="Bagging与随机森林"></a>Bagging与随机森林</h2><p>&emsp;Bagging是并行式集成学习最著名的代表，它直接基于自主采样法(boostrap sampling)</p>
-<hr>
-<p>输入：训练集$D=\left{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),…,(\boldsymbol x_m,y_m)\right}$<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;基学习算法<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;训练轮数$T$.<br>过程：<br>1: $\boldsymbol{for}\ t=1,2,…,T\ \boldsymbol{do}$<br>2: &emsp;$h_t=\mathfrak{L}(D,\mathcal{D}_{bs})$<br>3: $\boldsymbol{end\ for}$<br>输出：$H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)$</p>
-<hr>
-<script type="math/tex; mode=display">Bagging算法</script><p>Bagging能不经修改地用于多分类、回归任务。<br>随机森林(Random Forest，简称RF)是Bagging的一个扩展变体。RF在以决策树为基学习器构建Bagging集成的基础上，进一步在决策树的训练过程中引入了随机属性的选择。<br>随机森林的训练效率通常优于Bagging，因为在个体决策的过程中，Bagging使用的是“确定型”决策树，在选择划分属性时要对所有节点的所有属性进行考察，而随机森林使用的“随机型”决策树则只需考察一个属性子集。</p>
-<h2 id="结合策略"><a href="#结合策略" class="headerlink" title="结合策略"></a>结合策略</h2><p>平均法：简单平均法、加权平均法<br>投票法：绝对多数投票法、相对多数投票法、加权投票法</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>周志华，机器学习</p>
-</blockquote>
+    <title>Knowledge List</title>
+    <url>/2020/09/28/KnowledgeList/</url>
+    <content><![CDATA[<p><a href="https://shuoxux.github.io/2020/09/28/MachineLearning/">机器学习</a></p>
 ]]></content>
       <categories>
-        <category>Machine Learning</category>
+        <category>KnowledgeList</category>
       </categories>
       <tags>
-        <tag>Machine Learning</tag>
+        <tag>KnowledgeList</tag>
       </tags>
   </entry>
   <entry>
@@ -125,18 +111,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Knowledge List</title>
-    <url>/2020/09/28/KnowledgeList/</url>
-    <content><![CDATA[<p><a href="https://shuoxux.github.io/2020/09/28/MachineLearning/">机器学习</a></p>
-]]></content>
-      <categories>
-        <category>KnowledgeList</category>
-      </categories>
-      <tags>
-        <tag>KnowledgeList</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Latex Math</title>
     <url>/2020/10/04/LatexMath/</url>
     <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>This article shows how to use latex to write math functions.</p>
@@ -150,17 +124,19 @@
       </tags>
   </entry>
   <entry>
-    <title>How to Set a Personal Blog with Hexo</title>
-    <url>/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;我主要参考下面的内容依据hexo来搭建githubpages，并且用next主题优化。</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://blog.csdn.net/weixin_39345384/article/details/80095883" target="_blank" rel="noopener">Windows下通过GitHub+Hexo搭建个人博客的步骤</a><br><a href="https://blog.csdn.net/weixin_39345384/article/details/80785373" target="_blank" rel="noopener">Hexo框架下用NexT(v7.0+)主题美化博客</a><br><a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">Markdown 教程</a><br><a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank" rel="noopener">Markdown基本语法</a><br><a href="https://www.runoob.com/w3cnote/git-guide.html" target="_blank" rel="noopener">Github 简明教程</a><br><a href="https://www.runoob.com/git/git-tutorial.html" target="_blank" rel="noopener">Git 教程</a><br><a href="https://www.jianshu.com/p/296d22275cdd" target="_blank" rel="noopener">Git和GitHub使用教程</a></p>
-]]></content>
+    <title>Machine Learning</title>
+    <url>/2020/09/28/MachineLearning/</url>
+    <content><![CDATA[<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1><p>机器学习分为监督学习，无监督学习，强化学习，半监督学习与主动学习。<br>无监督——聚类。<br>监督——分类、回归、标注。<br>统计学习三要素:<br>方法=模型+策略+算法</p>
+<h2 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h2><h3 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h3><h3 id="K近邻"><a href="#K近邻" class="headerlink" title="K近邻"></a>K近邻</h3><h3 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h3><h3 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h3><h3 id="逻辑斯蒂回归与最大熵"><a href="#逻辑斯蒂回归与最大熵" class="headerlink" title="逻辑斯蒂回归与最大熵"></a>逻辑斯蒂回归与最大熵</h3><h3 id="支持向量机-核函数"><a href="#支持向量机-核函数" class="headerlink" title="支持向量机(核函数)"></a>支持向量机(核函数)</h3><h3 id="提升方法"><a href="#提升方法" class="headerlink" title="提升方法"></a>提升方法</h3><h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><h3 id="隐马尔可夫模型"><a href="#隐马尔可夫模型" class="headerlink" title="隐马尔可夫模型"></a>隐马尔可夫模型</h3><h3 id="条件随机场"><a href="#条件随机场" class="headerlink" title="条件随机场"></a>条件随机场</h3><h2 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h2><p>聚类,降维,概率模型估计,话题分析,图分析</p>
+<h3 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h3><p>相似度,距离(闵氏距离,马氏距离,相关系数,夹角余弦)<br>类簇(类和类之间的距离)<br>层次聚类,K均值聚类<br>奇异值分解(紧奇异值分解,截断奇异值分解)</p>
+<h3 id="主成分分析"><a href="#主成分分析" class="headerlink" title="主成分分析"></a>主成分分析</h3><p>总体,样本主成分分析</p>
+<h3 id="潜在语义分析-LSA"><a href="#潜在语义分析-LSA" class="headerlink" title="潜在语义分析(LSA)"></a>潜在语义分析(LSA)</h3><h3 id="马尔可夫链蒙特卡洛法"><a href="#马尔可夫链蒙特卡洛法" class="headerlink" title="马尔可夫链蒙特卡洛法"></a>马尔可夫链蒙特卡洛法</h3><p>Metropolis-Hastings算法</p>
+<h3 id="潜在迪利克雷分配"><a href="#潜在迪利克雷分配" class="headerlink" title="潜在迪利克雷分配"></a>潜在迪利克雷分配</h3><h3 id="PackRank算法"><a href="#PackRank算法" class="headerlink" title="PackRank算法"></a>PackRank算法</h3><h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1>]]></content>
       <categories>
-        <category>Tools</category>
+        <category>Machine Learning</category>
       </categories>
       <tags>
-        <tag>Hexo</tag>
-        <tag>Markdown</tag>
+        <tag>Machine Learning</tag>
       </tags>
   </entry>
   <entry>
@@ -418,33 +394,29 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}</script><h2 id="流程图"><a hr
       </tags>
   </entry>
   <entry>
-    <title>Machine Learning</title>
-    <url>/2020/09/28/MachineLearning/</url>
-    <content><![CDATA[<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1><p>机器学习分为监督学习，无监督学习，强化学习，半监督学习与主动学习。<br>无监督——聚类。<br>监督——分类、回归、标注。<br>统计学习三要素:<br>方法=模型+策略+算法</p>
-<h2 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h2><h3 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h3><h3 id="K近邻"><a href="#K近邻" class="headerlink" title="K近邻"></a>K近邻</h3><h3 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h3><h3 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h3><h3 id="逻辑斯蒂回归与最大熵"><a href="#逻辑斯蒂回归与最大熵" class="headerlink" title="逻辑斯蒂回归与最大熵"></a>逻辑斯蒂回归与最大熵</h3><h3 id="支持向量机-核函数"><a href="#支持向量机-核函数" class="headerlink" title="支持向量机(核函数)"></a>支持向量机(核函数)</h3><h3 id="提升方法"><a href="#提升方法" class="headerlink" title="提升方法"></a>提升方法</h3><h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><h3 id="隐马尔可夫模型"><a href="#隐马尔可夫模型" class="headerlink" title="隐马尔可夫模型"></a>隐马尔可夫模型</h3><h3 id="条件随机场"><a href="#条件随机场" class="headerlink" title="条件随机场"></a>条件随机场</h3><h2 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h2><p>聚类,降维,概率模型估计,话题分析,图分析</p>
-<h3 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h3><p>相似度,距离(闵氏距离,马氏距离,相关系数,夹角余弦)<br>类簇(类和类之间的距离)<br>层次聚类,K均值聚类<br>奇异值分解(紧奇异值分解,截断奇异值分解)</p>
-<h3 id="主成分分析"><a href="#主成分分析" class="headerlink" title="主成分分析"></a>主成分分析</h3><p>总体,样本主成分分析</p>
-<h3 id="潜在语义分析-LSA"><a href="#潜在语义分析-LSA" class="headerlink" title="潜在语义分析(LSA)"></a>潜在语义分析(LSA)</h3><h3 id="马尔可夫链蒙特卡洛法"><a href="#马尔可夫链蒙特卡洛法" class="headerlink" title="马尔可夫链蒙特卡洛法"></a>马尔可夫链蒙特卡洛法</h3><p>Metropolis-Hastings算法</p>
-<h3 id="潜在迪利克雷分配"><a href="#潜在迪利克雷分配" class="headerlink" title="潜在迪利克雷分配"></a>潜在迪利克雷分配</h3><h3 id="PackRank算法"><a href="#PackRank算法" class="headerlink" title="PackRank算法"></a>PackRank算法</h3><h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1>]]></content>
+    <title>集成学习(Ensemble Learning)</title>
+    <url>/2020/10/04/EnsembleLearning/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&ensp;&ensp;&ensp;&ensp;本篇是周志华西瓜书机器学习笔记，第八章集成学习。</p>
+<h2 id="个体与集成"><a href="#个体与集成" class="headerlink" title="个体与集成"></a>个体与集成</h2><p>&ensp;&ensp;&ensp;&ensp;集成学习通过构建并结合多个学习器来完成学习任务。<br>&ensp;&ensp;&ensp;&ensp;集成学习的一般结构是：先产生一组“个体学习器”(individual leaner)，再采用某种策略将他们结合起来。<br>&ensp;&ensp;&ensp;&ensp;集成学习通过将多个学习器进行结合，常可获得比单一学习器显著优越的学习性能，这对“弱学习器(weak leaner)”尤为明显。<br>&ensp;&ensp;&ensp;&ensp;根据个体学习器的生成方式，目前的集成学习方法大致可分为两类：个体学习器存在强依赖关系、必须串行生成的序列化方法(代表是Boosting);个体学习器间不存在强依赖关系、可同时生成的并行化方法(代表是Bagging和“随机森林”(Random Forest))</p>
+<h2 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h2><p>&ensp;&ensp;&ensp;&ensp;Boosting是一族可将弱学习器提升为强学习器的算法。算法机制：先从初始训练集训练出一个基学习器，再根据基学习器的表现对训练样本分布进行调整，使得先前样本在后续受到更多关注，然后基于调整后的样本分布来训练下一个基学习器；如此重复进行，直至基学习器数目达到事先制定的值T，最终将这T个额基学习器进行加权结合。<br>&ensp;&ensp;&ensp;&ensp;标准AdaBoost算法适用于二分类任务，有多种推导方式，容易理解的是基于“加性模型”来最小化指数损失函数。</p>
+<blockquote>
+<hr>
+<p>输入：训练集$D=\left{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),…,(\boldsymbol x_m,y_m)\right}$<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;基学习算法<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;训练轮数$T$.<br>过程：<br>1: $\mathcal{D}=1/m$.<br>2: $\boldsymbol{for}$ $t = 1,2,…,T$$ \boldsymbol{do}$<br>3:&ensp;&ensp;$h_t=\mathfrak{L}(D,\mathcal{D}_t);$<br>4:&ensp;&ensp;$\epsilon=P_{\boldsymbol{x}\sim\mathcal{D}}(h_t(\boldsymbol{x})\not ={f(\boldsymbol{x})})$;<br>5:&ensp;&ensp;$\boldsymbol{if}\ \epsilon_t&gt;0.5\ \boldsymbol{then\ break}$<br>6:&emsp;$\alpha_t=\frac{1}{2}ln(\frac{1-\epsilon_t}{\epsilon_t})$;<br>7:&emsp;$\mathcal{D}_{t+1}(\boldsymbol{x})=\frac{\mathcal{D}_t(\boldsymbol{x})}{Z_t}\times<br>  \begin{cases}<br>    exp(-\alpha_t)       &amp; \quad \text{if } h_t(\boldsymbol{x})=f(\boldsymbol{x}) \<br>    exp(\alpha_t)  &amp; \quad \text{if }  h_t(\boldsymbol{x})\not=f(\boldsymbol{x})<br>  \end{cases}$<br>8: $\boldsymbol{end\ for}$<br>输出：$H(\boldsymbol{x})=sign\big(\sum^T_{t=1}\alpha_th_t(\boldsymbol{x})\big)$</p>
+<hr>
+<script type="math/tex; mode=display">Adaoost算法</script><h2 id="Bagging与随机森林"><a href="#Bagging与随机森林" class="headerlink" title="Bagging与随机森林"></a>Bagging与随机森林</h2><p>&emsp;Bagging是并行式集成学习最著名的代表，它直接基于自主采样法(boostrap sampling)</p>
+<hr>
+<p>输入：训练集$D=\left{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),…,(\boldsymbol x_m,y_m)\right}$<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;基学习算法<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;训练轮数$T$.<br>过程：<br>1: $\boldsymbol{for}\ t=1,2,…,T\ \boldsymbol{do}$<br>2: &emsp;$h_t=\mathfrak{L}(D,\mathcal{D}_{bs})$<br>3: $\boldsymbol{end\ for}$<br>输出：$H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)$</p>
+<hr>
+<script type="math/tex; mode=display">Bagging算法</script><p>Bagging能不经修改地用于多分类、回归任务。<br>随机森林(Random Forest，简称RF)是Bagging的一个扩展变体。RF在以决策树为基学习器构建Bagging集成的基础上，进一步在决策树的训练过程中引入了随机属性的选择。<br>随机森林的训练效率通常优于Bagging，因为在个体决策的过程中，Bagging使用的是“确定型”决策树，在选择划分属性时要对所有节点的所有属性进行考察，而随机森林使用的“随机型”决策树则只需考察一个属性子集。</p>
+<h2 id="结合策略"><a href="#结合策略" class="headerlink" title="结合策略"></a>结合策略</h2><p>平均法：简单平均法、加权平均法<br>投票法：绝对多数投票法、相对多数投票法、加权投票法</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>周志华，机器学习</p>
+</blockquote>
+]]></content>
       <categories>
         <category>Machine Learning</category>
       </categories>
       <tags>
         <tag>Machine Learning</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>How to Use Mendeley</title>
-    <url>/2020/06/22/how-to-use-mendeley/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用mendeley来写论文的一些方法。</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://wenku.baidu.com/view/f361cdbafd0a79563c1e72a6.html" target="_blank" rel="noopener">Mendeley中文入门教程</a><br><a href="https://github.com/Vopaaz/CNKI_2_BibTeX" target="_blank" rel="noopener">CNKI_2_BibTeX</a></p>
-]]></content>
-      <categories>
-        <category>Tools</category>
-      </categories>
-      <tags>
-        <tag>Mendeley</tag>
-        <tag>Papers</tag>
       </tags>
   </entry>
   <entry>
@@ -459,6 +431,34 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}</script><h2 id="流程图"><a hr
       <tags>
         <tag>Markdown</tag>
         <tag>Papers</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to Set a Personal Blog with Hexo</title>
+    <url>/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;我主要参考下面的内容依据hexo来搭建githubpages，并且用next主题优化。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://blog.csdn.net/weixin_39345384/article/details/80095883" target="_blank" rel="noopener">Windows下通过GitHub+Hexo搭建个人博客的步骤</a><br><a href="https://blog.csdn.net/weixin_39345384/article/details/80785373" target="_blank" rel="noopener">Hexo框架下用NexT(v7.0+)主题美化博客</a><br><a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">Markdown 教程</a><br><a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank" rel="noopener">Markdown基本语法</a><br><a href="https://www.runoob.com/w3cnote/git-guide.html" target="_blank" rel="noopener">Github 简明教程</a><br><a href="https://www.runoob.com/git/git-tutorial.html" target="_blank" rel="noopener">Git 教程</a><br><a href="https://www.jianshu.com/p/296d22275cdd" target="_blank" rel="noopener">Git和GitHub使用教程</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Markdown</tag>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to Use Mendeley</title>
+    <url>/2020/06/22/how-to-use-mendeley/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用mendeley来写论文的一些方法。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://wenku.baidu.com/view/f361cdbafd0a79563c1e72a6.html" target="_blank" rel="noopener">Mendeley中文入门教程</a><br><a href="https://github.com/Vopaaz/CNKI_2_BibTeX" target="_blank" rel="noopener">CNKI_2_BibTeX</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Papers</tag>
+        <tag>Mendeley</tag>
       </tags>
   </entry>
 </search>
