@@ -1,265 +1,806 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
+<search>
+  <entry>
+    <title>Attention Is All You Need</title>
+    <url>/2020/09/30/AttentionIsAllYouNeed/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Machine Learning</category>
+      </categories>
+      <tags>
+        <tag>Machine Learning</tag>
+        <tag>Deep Learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>集成学习(Ensemble Learning)</title>
+    <url>/2020/10/04/EnsembleLearning/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&ensp;&ensp;&ensp;&ensp;本篇是周志华西瓜书机器学习笔记，第八章集成学习。</p>
+<h2 id="个体与集成"><a href="#个体与集成" class="headerlink" title="个体与集成"></a>个体与集成</h2><p>&ensp;&ensp;&ensp;&ensp;集成学习通过构建并结合多个学习器来完成学习任务。<br>&ensp;&ensp;&ensp;&ensp;集成学习的一般结构是：先产生一组“个体学习器”(individual leaner)，再采用某种策略将他们结合起来。<br>&ensp;&ensp;&ensp;&ensp;集成学习通过将多个学习器进行结合，常可获得比单一学习器显著优越的学习性能，这对“弱学习器(weak leaner)”尤为明显。<br>&ensp;&ensp;&ensp;&ensp;根据个体学习器的生成方式，目前的集成学习方法大致可分为两类：个体学习器存在强依赖关系、必须串行生成的序列化方法(代表是Boosting);个体学习器间不存在强依赖关系、可同时生成的并行化方法(代表是Bagging和“随机森林”(Random Forest))</p>
+<h2 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h2><p>&ensp;&ensp;&ensp;&ensp;Boosting是一族可将弱学习器提升为强学习器的算法。算法机制：先从初始训练集训练出一个基学习器，再根据基学习器的表现对训练样本分布进行调整，使得先前样本在后续受到更多关注，然后基于调整后的样本分布来训练下一个基学习器；如此重复进行，直至基学习器数目达到事先制定的值T，最终将这T个额基学习器进行加权结合。<br>&ensp;&ensp;&ensp;&ensp;标准AdaBoost算法适用于二分类任务，有多种推导方式，容易理解的是基于“加性模型”来最小化指数损失函数。</p>
+<blockquote>
+<hr>
+<p>输入：训练集$D=\left{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),…,(\boldsymbol x_m,y_m)\right}$<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;基学习算法<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;训练轮数$T$.<br>过程：<br>1: $\mathcal{D}=1/m$.<br>2: $\boldsymbol{for}$ $t = 1,2,…,T$$ \boldsymbol{do}$<br>3:&ensp;&ensp;$h_t=\mathfrak{L}(D,\mathcal{D}_t);$<br>4:&ensp;&ensp;$\epsilon=P_{\boldsymbol{x}\sim\mathcal{D}}(h_t(\boldsymbol{x})\not ={f(\boldsymbol{x})})$;<br>5:&ensp;&ensp;$\boldsymbol{if}\ \epsilon_t&gt;0.5\ \boldsymbol{then\ break}$<br>6:&emsp;$\alpha_t=\frac{1}{2}ln(\frac{1-\epsilon_t}{\epsilon_t})$;<br>7:&emsp;$\mathcal{D}_{t+1}(\boldsymbol{x})=\frac{\mathcal{D}_t(\boldsymbol{x})}{Z_t}\times<br>  \begin{cases}<br>    exp(-\alpha_t)       &amp; \quad \text{if } h_t(\boldsymbol{x})=f(\boldsymbol{x}) \<br>    exp(\alpha_t)  &amp; \quad \text{if }  h_t(\boldsymbol{x})\not=f(\boldsymbol{x})<br>  \end{cases}$<br>8: $\boldsymbol{end\ for}$<br>输出：$H(\boldsymbol{x})=sign\big(\sum^T_{t=1}\alpha_th_t(\boldsymbol{x})\big)$</p>
+<hr>
+<script type="math/tex; mode=display">Adaoost算法</script><h2 id="Bagging与随机森林"><a href="#Bagging与随机森林" class="headerlink" title="Bagging与随机森林"></a>Bagging与随机森林</h2><p>&emsp;Bagging是并行式集成学习最著名的代表，它直接基于自主采样法(boostrap sampling)</p>
+<hr>
+<p>输入：训练集$D=\left{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),…,(\boldsymbol x_m,y_m)\right}$<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;基学习算法<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;训练轮数$T$.<br>过程：<br>1: $\boldsymbol{for}\ t=1,2,…,T\ \boldsymbol{do}$<br>2: &emsp;$h_t=\mathfrak{L}(D,\mathcal{D}_{bs})$<br>3: $\boldsymbol{end\ for}$<br>输出：$H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)$</p>
+<hr>
+<script type="math/tex; mode=display">Bagging算法</script><p>Bagging能不经修改地用于多分类、回归任务。<br>随机森林(Random Forest，简称RF)是Bagging的一个扩展变体。RF在以决策树为基学习器构建Bagging集成的基础上，进一步在决策树的训练过程中引入了随机属性的选择。<br>随机森林的训练效率通常优于Bagging，因为在个体决策的过程中，Bagging使用的是“确定型”决策树，在选择划分属性时要对所有节点的所有属性进行考察，而随机森林使用的“随机型”决策树则只需考察一个属性子集。</p>
+<h2 id="结合策略"><a href="#结合策略" class="headerlink" title="结合策略"></a>结合策略</h2><p>平均法：简单平均法、加权平均法<br>投票法：绝对多数投票法、相对多数投票法、加权投票法</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>周志华，机器学习</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Machine Learning</category>
+      </categories>
+      <tags>
+        <tag>Machine Learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How To Use Git</title>
+    <url>/2020/09/30/HowToUseGit/</url>
+    <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.</p>
+<h2 id="Main-porcelain-commands"><a href="#Main-porcelain-commands" class="headerlink" title="Main porcelain commands"></a>Main porcelain commands</h2><p>&gt;</p>
+<blockquote>
+<p>git-add[1]<br>Add file contents to the index</p>
+<p>git-am[1]<br>Apply a series of patches from a mailbox</p>
+<p>git-archive[1]<br>Create an archive of files from a named tree</p>
+<p>git-bisect[1]<br>Use binary search to find the commit that introduced a bug</p>
+<p>git-branch[1]<br>List, create, or delete branches</p>
+<p>git-bundle[1]<br>Move objects and refs by archive</p>
+<p>git-checkout[1]<br>Switch branches or restore working tree files</p>
+<p>git-cherry-pick[1]<br>Apply the changes introduced by some existing commits</p>
+<p>git-citool[1]<br>Graphical alternative to git-commit</p>
+<p>git-clean[1]<br>Remove untracked files from the working tree</p>
+<p>git-clone[1]<br>Clone a repository into a new directory</p>
+<p>git-commit[1]<br>Record changes to the repository</p>
+<p>git-describe[1]<br>Give an object a human readable name based on an available ref</p>
+<p>git-diff[1]<br>Show changes between commits, commit and working tree, etc</p>
+<p>git-fetch[1]<br>Download objects and refs from another repository</p>
+<p>git-format-patch[1]<br>Prepare patches for e-mail submission</p>
+<p>git-gc[1]<br>Cleanup unnecessary files and optimize the local repository</p>
+<p>git-grep[1]<br>Print lines matching a pattern</p>
+<p>git-gui[1]<br>A portable graphical interface to Git</p>
+<p>git-init[1]<br>Create an empty Git repository or reinitialize an existing one</p>
+<p>gitk[1]<br>The Git repository browser</p>
+<p>git-log[1]<br>Show commit logs</p>
+<p>git-merge[1]<br>Join two or more development histories together</p>
+<p>git-mv[1]<br>Move or rename a file, a directory, or a symlink</p>
+<p>git-notes[1]<br>Add or inspect object notes</p>
+<p>git-pull[1]<br>Fetch from and integrate with another repository or a local branch</p>
+<p>git-push[1]<br>Update remote refs along with associated objects</p>
+<p>git-range-diff[1]<br>Compare two commit ranges (e.g. two versions of a branch)</p>
+<p>git-rebase[1]<br>Reapply commits on top of another base tip</p>
+<p>git-reset[1]<br>Reset current HEAD to the specified state</p>
+<p>git-restore[1]<br>Restore working tree files</p>
+<p>git-revert[1]<br>Revert some existing commits</p>
+<p>git-rm[1]<br>Remove files from the working tree and from the index</p>
+<p>git-shortlog[1]<br>Summarize git log output</p>
+<p>git-show[1]<br>Show various types of objects</p>
+<p>git-sparse-checkout[1]<br>Initialize and modify the sparse-checkout</p>
+<p>git-stash[1]<br>Stash the changes in a dirty working directory away</p>
+<p>git-status[1]<br>Show the working tree status</p>
+<p>git-submodule[1]<br>Initialize, update or inspect submodules</p>
+<p>git-switch[1]<br>Switch branches</p>
+<p>git-tag[1]<br>Create, list, delete or verify a tag object signed with GPG</p>
+<p>git-worktree[1]<br>Manage multiple working trees</p>
+<p>Ancillary Commands<br>Manipulators:</p>
+<p>git-config[1]<br>Get and set repository or global options</p>
+<p>git-fast-export[1]<br>Git data exporter</p>
+<p>git-fast-import[1]<br>Backend for fast Git data importers</p>
+<p>git-filter-branch[1]<br>Rewrite branches</p>
+<p>git-mergetool[1]<br>Run merge conflict resolution tools to resolve merge conflicts</p>
+<p>git-pack-refs[1]<br>Pack heads and tags for efficient repository access</p>
+<p>git-prune[1]<br>Prune all unreachable objects from the object database</p>
+<p>git-reflog[1]<br>Manage reflog information</p>
+<p>git-remote[1]<br>Manage set of tracked repositories</p>
+<p>git-repack[1]<br>Pack unpacked objects in a repository</p>
+<p>git-replace[1]<br>Create, list, delete refs to replace objects</p>
+<p>Interrogators:</p>
+<p>git-annotate[1]<br>Annotate file lines with commit information</p>
+<p>git-blame[1]<br>Show what revision and author last modified each line of a file</p>
+<p>git-bugreport[1]<br>Collect information for user to file a bug report</p>
+<p>git-count-objects[1]<br>Count unpacked number of objects and their disk consumption</p>
+<p>git-difftool[1]<br>Show changes using common diff tools</p>
+<p>git-fsck[1]<br>Verifies the connectivity and validity of the objects in the database</p>
+<p>git-help[1]<br>Display help information about Git</p>
+<p>git-instaweb[1]<br>Instantly browse your working repository in gitweb</p>
+<p>git-merge-tree[1]<br>Show three-way merge without touching index</p>
+<p>git-rerere[1]<br>Reuse recorded resolution of conflicted merges</p>
+<p>git-show-branch[1]<br>Show branches and their commits</p>
+<p>git-verify-commit[1]<br>Check the GPG signature of commits</p>
+<p>git-verify-tag[1]<br>Check the GPG signature of tags</p>
+<p>gitweb[1]<br>Git web interface (web frontend to Git repositories)</p>
+<p>git-whatchanged[1]<br>Show logs with difference each commit introduces</p>
+</blockquote>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://git-scm.com/" target="_blank" rel="noopener">git-sem.com</a><br><a href="https://git-scm.com/docs/git#_git_commands" target="_blank" rel="noopener">GitDoc</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Knowledge List</title>
+    <url>/2020/09/28/KnowledgeList/</url>
+    <content><![CDATA[<p><a href="https://shuoxux.github.io/2020/09/28/MachineLearning/">机器学习</a></p>
+]]></content>
+      <categories>
+        <category>KnowledgeList</category>
+      </categories>
+      <tags>
+        <tag>KnowledgeList</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Latex Math</title>
+    <url>/2020/10/04/LatexMath/</url>
+    <content><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>This article shows how to use latex to write math functions.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.latex-project.org/" target="_blank" rel="noopener">latex-project.org</a><br><a href="https://www.latex-project.org/help/documentation/amsldoc.pdf" target="_blank" rel="noopener">User’s Guide for the amsmath Package (Version 2.1)</a><br><a href="https://www.caam.rice.edu/~heinken/latex/symbols.pdf" target="_blank" rel="noopener">LATEX Mathematical Symbols</a><br><a href="https://en.wikibooks.org/wiki/LaTeX/Mathematics" target="_blank" rel="noopener">LaTeX/Mathematics</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Latex</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to Set a Personal Blog with Hexo</title>
+    <url>/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;我主要参考下面的内容依据hexo来搭建githubpages，并且用next主题优化。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://blog.csdn.net/weixin_39345384/article/details/80095883" target="_blank" rel="noopener">Windows下通过GitHub+Hexo搭建个人博客的步骤</a><br><a href="https://blog.csdn.net/weixin_39345384/article/details/80785373" target="_blank" rel="noopener">Hexo框架下用NexT(v7.0+)主题美化博客</a><br><a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">Markdown 教程</a><br><a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank" rel="noopener">Markdown基本语法</a><br><a href="https://www.runoob.com/w3cnote/git-guide.html" target="_blank" rel="noopener">Github 简明教程</a><br><a href="https://www.runoob.com/git/git-tutorial.html" target="_blank" rel="noopener">Git 教程</a><br><a href="https://www.jianshu.com/p/296d22275cdd" target="_blank" rel="noopener">Git和GitHub使用教程</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Markdown语法</title>
+    <url>/2020/09/28/Markdown%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这篇文章主要是<a href="https://www.runoob.com/markdown/" target="_blank" rel="noopener">runoob.com</a> Markdown语法笔记,待完善。</p>
+<h2 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h2><p>使用#来表示标题。</p>
+<pre><code># 一级标题
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题
+</code></pre><blockquote>
+<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4><h5 id="五级标题"><a href="#五级标题" class="headerlink" title="五级标题"></a>五级标题</h5><h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6></blockquote>
+<h2 id="段落"><a href="#段落" class="headerlink" title="段落"></a>段落</h2><p>使用空行换段。</p>
+<pre><code>这样  
+
+换段
+</code></pre><blockquote>
+<p>这样</p>
+<p>换段</p>
+</blockquote>
+<h2 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h2><p>按照以下方式改变字体。</p>
+<pre><code>*斜体文本*
+_斜体文本_
+**粗体文本**
+__粗体文本__
+***粗斜体文本***
+___粗斜体文本___
+</code></pre><blockquote>
+<p><em>斜体文本</em><br>_斜体文本_<br><strong>粗体文本</strong><br><strong>粗体文本</strong><br><strong><em>粗斜体文本</em></strong><br><strong>_粗斜体文本_</strong></p>
+</blockquote>
+<h2 id="分隔线"><a href="#分隔线" class="headerlink" title="分隔线"></a>分隔线</h2><pre><code>***
+
+* * *
+
+*****
+
+- - -
+
+----------
+</code></pre><blockquote>
+<p><em>斜体文本</em><br>_斜体文本_<br><strong>粗体文本</strong><br><strong>粗体文本</strong><br><strong><em>粗斜体文本</em></strong><br><strong>_粗斜体文本_</strong></p>
+</blockquote>
+<h2 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h2><p>删除线使用”~~~~”表示</p>
+<blockquote>
+<p><del>这是删除线</del></p>
+<h2 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h2><pre><code>&lt;u&gt;这是下划线文本&lt;/u&gt;
+</code></pre><p><u></p>
+</blockquote>
+<h2 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h2><pre><code>创建脚注格式类似这样 [^1]。
+</code></pre><blockquote id="fn_1">
+<sup>1</sup>. 这是脚注。<a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><pre><code>* 第一项
+* 第二项
+* 第三项
+
++ 第一项
++ 第二项
++ 第三项
+
+
+- 第一项
+- 第二项
+- 第三项
+
+1. 第一项
+    - a
+    - b
+2. 第二项
+    - c
+    - d
+</code></pre><blockquote>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ol>
+<li>第一项<ul>
+<li>a</li>
+<li>b</li>
+</ul>
+</li>
+<li>第二项<ul>
+<li>c</li>
+<li>d</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<h2 id="区块引用"><a href="#区块引用" class="headerlink" title="区块引用"></a>区块引用</h2><pre><code>&gt; 这是
+&gt; 区块
+&gt; 引用
+
+&gt; 这是
+&gt;&gt; 区块
+&gt;&gt;&gt; 引用
+
+&gt; 区块中使用列表
+&gt; 1. 第一项
+&gt; 2. 第二项
+&gt; + 第一项
+&gt; + 第二项
+&gt; + 第三项
+
+* 第一项
+    &gt; 这是
+    &gt; 区块
+* 第二项
+</code></pre><blockquote>
+<p>这是<br>区块<br>引用</p>
+<p>这是</p>
+<blockquote>
+<p>区块</p>
+<blockquote>
+<p>引用</p>
+</blockquote>
+</blockquote>
+<p>区块中使用列表</p>
+<ol>
+<li>第一项</li>
+<li>第二项</li>
+</ol>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项<br>这是<br>区块</li>
+<li>第二项</li>
+</ul>
+</blockquote>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>使用<code>`包围。</code>print()` 函数</p>
+<figure class="highlight plain"><figcaption><span>install tensorflow```</span></figcaption><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">&#96;&#96;&#96;print(&quot;hello&quot;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"hello"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><pre><code>这是一个链接[链接到参考文件](https://www.runoob.com/markdown/)
+</code></pre><p>这是一个链接<a href="https://www.runoob.com/markdown/" target="_blank" rel="noopener">链接到参考文件</a><br><a href="https://www.google.com" target="_blank" rel="noopener">google</a><br><a href="https://www.baidu.com" target="_blank" rel="noopener">baidu</a></p>
+<h2 id="图标"><a href="#图标" class="headerlink" title="图标"></a>图标</h2><pre><code>![RUNOOB 图标](http://static.runoob.com/images/runoob-logo.png)
+
+![RUNOOB 图标](http://static.runoob.com/images/runoob-logo.png &quot;RUNOOB&quot;)
+</code></pre><p><img src="http://static.runoob.com/images/runoob-logo.png" alt="RUNOOB 图标"></p>
+<p><img src="http://static.runoob.com/images/runoob-logo.png" alt="RUNOOB 图标" title="RUNOOB"></p>
+<p>这个链接用 1 作为网址变量 <a href="http://static.runoob.com/images/runoob-logo.png" target="_blank" rel="noopener">RUNOOB</a>.<br>然后在文档的结尾为变量赋值（网址）。</p>
+<p><img src="http://static.runoob.com/images/runoob-logo.png" width="20%"></p>
+<h2 id="本地图片"><a href="#本地图片" class="headerlink" title="本地图片"></a>本地图片</h2><p><img src="./Markdown语法/test.jpg" alt="图片"></p>
+<h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><pre><code>|  表头   | 表头  |
+|  ----  | ----  |
+| 单元格  | 单元格 |
+| 单元格  | 单元格 |
+
+
+| 左对齐 | 右对齐 | 居中对齐 |
+| :-----| ----: | :----: |
+| 单元格 | 单元格 | 单元格 |
+| 单元格 | 单元格 | 单元格 |
+</code></pre><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>表头</th>
+<th>表头</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+<tr>
+<td>单元格</td>
+<td>单元格</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">左对齐</th>
+<th style="text-align:right">右对齐</th>
+<th style="text-align:center">居中对齐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">单元格</td>
+<td style="text-align:right">单元格</td>
+<td style="text-align:center">单元格</td>
+</tr>
+<tr>
+<td style="text-align:left">单元格</td>
+<td style="text-align:right">单元格</td>
+<td style="text-align:center">单元格</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="keyboard"><a href="#keyboard" class="headerlink" title="keyboard"></a>keyboard</h2><pre><code>使用 &lt;kbd&gt;Ctrl&lt;/kbd&gt;+&lt;kbd&gt;Alt&lt;/kbd&gt;+&lt;kbd&gt;Del&lt;/kbd&gt; 重启电脑。
+</code></pre><blockquote>
+<p>使用 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 重启电脑。</p>
+</blockquote>
+<p><strong>文本加粗</strong><br>** 正常显示星号 **</p>
+<h2 id="数学公式"><a href="#数学公式" class="headerlink" title="数学公式"></a>数学公式</h2><pre><code>$$
+\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix} 
+\mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\
+\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \\
+\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0 \\
+\end{vmatrix}
+${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
+$$
+</code></pre><script type="math/tex; mode=display">
+\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix} 
+\mathbf{i} & \mathbf{j} & \mathbf{k} \\
+\frac{\partial X}{\partial u} &  \frac{\partial Y}{\partial u} & 0 \\
+\frac{\partial X}{\partial v} &  \frac{\partial Y}{\partial v} & 0 \\
+\end{vmatrix}
+${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}</script><h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre><code><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">graph LR</span><br><span class="line">A[方形] --&gt;B(圆角)</span><br><span class="line">    B --&gt; C&#123;条件a&#125;</span><br><span class="line">    C --&gt;|a&#x3D;1| D[结果1]</span><br><span class="line">    C --&gt;|a&#x3D;2| E[结果2]</span><br><span class="line">    F[横向流程图]</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">graph LR</span><br><span class="line">A[方形] --&gt;B(圆角)</span><br><span class="line">    B --&gt; C&#123;条件a&#125;</span><br><span class="line">    C --&gt;|a&#x3D;1| D[结果1]</span><br><span class="line">    C --&gt;|a&#x3D;2| E[结果2]</span><br><span class="line">    F[横向流程图]</span><br></pre></td></tr></table></figure>
+<pre><code><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">graph TD</span><br><span class="line">A[方形] --&gt; B(圆角)</span><br><span class="line">    B --&gt; C&#123;条件a&#125;</span><br><span class="line">    C --&gt; |a&#x3D;1| D[结果1]</span><br><span class="line">    C --&gt; |a&#x3D;2| E[结果2]</span><br><span class="line">    F[竖向流程图]</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">graph TD</span><br><span class="line">A[方形] --&gt; B(圆角)</span><br><span class="line">    B --&gt; C&#123;条件a&#125;</span><br><span class="line">    C --&gt; |a&#x3D;1| D[结果1]</span><br><span class="line">    C --&gt; |a&#x3D;2| E[结果2]</span><br><span class="line">    F[竖向流程图]</span><br></pre></td></tr></table></figure>
+<pre><code><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始框</span><br><span class="line">op&#x3D;&gt;operation: 处理框</span><br><span class="line">cond&#x3D;&gt;condition: 判断框(是或否?)</span><br><span class="line">sub1&#x3D;&gt;subroutine: 子流程</span><br><span class="line">io&#x3D;&gt;inputoutput: 输入输出框</span><br><span class="line">e&#x3D;&gt;end: 结束框</span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始框</span><br><span class="line">op&#x3D;&gt;operation: 处理框</span><br><span class="line">cond&#x3D;&gt;condition: 判断框(是或否?)</span><br><span class="line">sub1&#x3D;&gt;subroutine: 子流程</span><br><span class="line">io&#x3D;&gt;inputoutput: 输入输出框</span><br><span class="line">e&#x3D;&gt;end: 结束框</span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
+<pre><code><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始框</span><br><span class="line">op&#x3D;&gt;operation: 处理框</span><br><span class="line">cond&#x3D;&gt;condition: 判断框(是或否?)</span><br><span class="line">sub1&#x3D;&gt;subroutine: 子流程</span><br><span class="line">io&#x3D;&gt;inputoutput: 输入输出框</span><br><span class="line">e&#x3D;&gt;end: 结束框</span><br><span class="line">st(right)-&gt;op(right)-&gt;cond</span><br><span class="line">cond(yes)-&gt;io(bottom)-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始框</span><br><span class="line">op&#x3D;&gt;operation: 处理框</span><br><span class="line">cond&#x3D;&gt;condition: 判断框(是或否?)</span><br><span class="line">sub1&#x3D;&gt;subroutine: 子流程</span><br><span class="line">io&#x3D;&gt;inputoutput: 输入输出框</span><br><span class="line">e&#x3D;&gt;end: 结束框</span><br><span class="line">st(right)-&gt;op(right)-&gt;cond</span><br><span class="line">cond(yes)-&gt;io(bottom)-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
+<pre><code><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">对象A-&gt;对象B: 对象B你好吗?（请求）</span><br><span class="line">Note right of 对象B: 对象B的描述</span><br><span class="line">Note left of 对象A: 对象A的描述(提示)</span><br><span class="line">对象B--&gt;对象A: 我很好(响应)</span><br><span class="line">对象A-&gt;对象B: 你真的好吗？</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">对象A-&gt;对象B: 对象B你好吗?（请求）</span><br><span class="line">Note right of 对象B: 对象B的描述</span><br><span class="line">Note left of 对象A: 对象A的描述(提示)</span><br><span class="line">对象B--&gt;对象A: 我很好(响应)</span><br><span class="line">对象A-&gt;对象B: 你真的好吗？</span><br></pre></td></tr></table></figure>
+<pre><code><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Title: 标题：复杂使用</span><br><span class="line">对象A-&gt;对象B: 对象B你好吗?（请求）</span><br><span class="line">Note right of 对象B: 对象B的描述</span><br><span class="line">Note left of 对象A: 对象A的描述(提示)</span><br><span class="line">对象B--&gt;对象A: 我很好(响应)</span><br><span class="line">对象B-&gt;小三: 你好吗</span><br><span class="line">小三--&gt;&gt;对象A: 对象B找我了</span><br><span class="line">对象A-&gt;对象B: 你真的好吗？</span><br><span class="line">Note over 小三,对象B: 我们是朋友</span><br><span class="line">participant C</span><br><span class="line">Note right of C: 没人陪我玩</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Title: 标题：复杂使用</span><br><span class="line">对象A-&gt;对象B: 对象B你好吗?（请求）</span><br><span class="line">Note right of 对象B: 对象B的描述</span><br><span class="line">Note left of 对象A: 对象A的描述(提示)</span><br><span class="line">对象B--&gt;对象A: 我很好(响应)</span><br><span class="line">对象B-&gt;小三: 你好吗</span><br><span class="line">小三--&gt;&gt;对象A: 对象B找我了</span><br><span class="line">对象A-&gt;对象B: 你真的好吗？</span><br><span class="line">Note over 小三,对象B: 我们是朋友</span><br><span class="line">participant C</span><br><span class="line">Note right of C: 没人陪我玩</span><br></pre></td></tr></table></figure>
+<pre><code><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%% 时序图例子,-&gt; 直线，--&gt;虚线，-&gt;&gt;实线箭头</span><br><span class="line">sequenceDiagram</span><br><span class="line">    participant 张三</span><br><span class="line">    participant 李四</span><br><span class="line">    张三-&gt;王五: 王五你好吗？</span><br><span class="line">    loop 健康检查</span><br><span class="line">        王五-&gt;王五: 与疾病战斗</span><br><span class="line">    end</span><br><span class="line">    Note right of 王五: 合理 食物 &lt;br&#x2F;&gt;看医生...</span><br><span class="line">    李四--&gt;&gt;张三: 很好!</span><br><span class="line">    王五-&gt;李四: 你怎么样?</span><br><span class="line">    李四--&gt;王五: 很好!</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%% 时序图例子,-&gt; 直线，--&gt;虚线，-&gt;&gt;实线箭头</span><br><span class="line">  sequenceDiagram</span><br><span class="line">    participant 张三</span><br><span class="line">    participant 李四</span><br><span class="line">    张三-&gt;王五: 王五你好吗？</span><br><span class="line">    loop 健康检查</span><br><span class="line">        王五-&gt;王五: 与疾病战斗</span><br><span class="line">    end</span><br><span class="line">    Note right of 王五: 合理 食物 &lt;br&#x2F;&gt;看医生...</span><br><span class="line">    李四--&gt;&gt;张三: 很好!</span><br><span class="line">    王五-&gt;李四: 你怎么样?</span><br><span class="line">    李四--&gt;王五: 很好!</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><figcaption><span>语法示例</span></figcaption><table><tr><td class="code"><pre><span class="line">    gantt</span><br><span class="line">    dateFormat  YYYY-MM-DD</span><br><span class="line">    title 软件开发甘特图</span><br><span class="line">    section 设计</span><br><span class="line">    需求                      :done,    des1, 2014-01-06,2014-01-08</span><br><span class="line">    原型                      :active,  des2, 2014-01-09, 3d</span><br><span class="line">    UI设计                     :         des3, after des2, 5d</span><br><span class="line">未来任务                     :         des4, after des3, 5d</span><br><span class="line">    section 开发</span><br><span class="line">    学习准备理解需求                      :crit, done, 2014-01-06,24h</span><br><span class="line">    设计框架                             :crit, done, after des2, 2d</span><br><span class="line">    开发                                 :crit, active, 3d</span><br><span class="line">    未来任务                              :crit, 5d</span><br><span class="line">    耍                                   :2d</span><br><span class="line">    section 测试</span><br><span class="line">    功能测试                              :active, a1, after des3, 3d</span><br><span class="line">    压力测试                               :after a1  , 20h</span><br><span class="line">    测试报告                               : 48h</span><br></pre></td></tr></table></figure>
+<pre><code><figure class="highlight plain"><figcaption><span>语法示例</span></figcaption><table><tr><td class="code"><pre><span class="line">    gantt</span><br><span class="line">    dateFormat  YYYY-MM-DD</span><br><span class="line">    title 软件开发甘特图</span><br><span class="line">    section 设计</span><br><span class="line">    需求                      :done,    des1, 2014-01-06,2014-01-08</span><br><span class="line">    原型                      :active,  des2, 2014-01-09, 3d</span><br><span class="line">    UI设计                     :         des3, after des2, 5d</span><br><span class="line">未来任务                     :         des4, after des3, 5d</span><br><span class="line">    section 开发</span><br><span class="line">    学习准备理解需求                      :crit, done, 2014-01-06,24h</span><br><span class="line">    设计框架                             :crit, done, after des2, 2d</span><br><span class="line">    开发                                 :crit, active, 3d</span><br><span class="line">    未来任务                              :crit, 5d</span><br><span class="line">    耍                                   :2d</span><br><span class="line">    section 测试</span><br><span class="line">    功能测试                              :active, a1, after des3, 3d</span><br><span class="line">    压力测试                               :after a1  , 20h</span><br><span class="line">    测试报告                               : 48h</span><br></pre></td></tr></table></figure>
+</code></pre><p>参考<br><a href="https://www.runoob.com/markdown/" target="_blank" rel="noopener">markdown</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Machine Learning</title>
+    <url>/2020/09/28/MachineLearning/</url>
+    <content><![CDATA[<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1><p>机器学习分为监督学习，无监督学习，强化学习，半监督学习与主动学习。<br>无监督——聚类。<br>监督——分类、回归、标注。<br>统计学习三要素:<br>方法=模型+策略+算法</p>
+<h2 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h2><h3 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h3><h3 id="K近邻"><a href="#K近邻" class="headerlink" title="K近邻"></a>K近邻</h3><h3 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h3><h3 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h3><h3 id="逻辑斯蒂回归与最大熵"><a href="#逻辑斯蒂回归与最大熵" class="headerlink" title="逻辑斯蒂回归与最大熵"></a>逻辑斯蒂回归与最大熵</h3><h3 id="支持向量机-核函数"><a href="#支持向量机-核函数" class="headerlink" title="支持向量机(核函数)"></a>支持向量机(核函数)</h3><h3 id="提升方法"><a href="#提升方法" class="headerlink" title="提升方法"></a>提升方法</h3><h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><h3 id="隐马尔可夫模型"><a href="#隐马尔可夫模型" class="headerlink" title="隐马尔可夫模型"></a>隐马尔可夫模型</h3><h3 id="条件随机场"><a href="#条件随机场" class="headerlink" title="条件随机场"></a>条件随机场</h3><h2 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h2><p>聚类,降维,概率模型估计,话题分析,图分析</p>
+<h3 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h3><p>相似度,距离(闵氏距离,马氏距离,相关系数,夹角余弦)<br>类簇(类和类之间的距离)<br>层次聚类,K均值聚类<br>奇异值分解(紧奇异值分解,截断奇异值分解)</p>
+<h3 id="主成分分析"><a href="#主成分分析" class="headerlink" title="主成分分析"></a>主成分分析</h3><p>总体,样本主成分分析</p>
+<h3 id="潜在语义分析-LSA"><a href="#潜在语义分析-LSA" class="headerlink" title="潜在语义分析(LSA)"></a>潜在语义分析(LSA)</h3><h3 id="马尔可夫链蒙特卡洛法"><a href="#马尔可夫链蒙特卡洛法" class="headerlink" title="马尔可夫链蒙特卡洛法"></a>马尔可夫链蒙特卡洛法</h3><p>Metropolis-Hastings算法</p>
+<h3 id="潜在迪利克雷分配"><a href="#潜在迪利克雷分配" class="headerlink" title="潜在迪利克雷分配"></a>潜在迪利克雷分配</h3><h3 id="PackRank算法"><a href="#PackRank算法" class="headerlink" title="PackRank算法"></a>PackRank算法</h3><h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1>]]></content>
+      <categories>
+        <category>Machine Learning</category>
+      </categories>
+      <tags>
+        <tag>Machine Learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to Use Mendeley</title>
+    <url>/2020/06/22/how-to-use-mendeley/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用mendeley来写论文的一些方法。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://wenku.baidu.com/view/f361cdbafd0a79563c1e72a6.html" target="_blank" rel="noopener">Mendeley中文入门教程</a><br><a href="https://github.com/Vopaaz/CNKI_2_BibTeX" target="_blank" rel="noopener">CNKI_2_BibTeX</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Mendeley</tag>
+        <tag>Papers</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>How to Write Papers with Markdown</title>
+    <url>/2020/06/22/how-to-write-papers-with-markdown/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用markdown来写论文的一些方法，还不完善等待补充。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.jianshu.com/p/b0ac7ae98100" target="_blank" rel="noopener">如何用Markdown写论文？</a></p>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Markdown</tag>
+        <tag>Papers</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>EnsembleLearning</title>
+    <url>/2020/10/04/EnsembleLearning/</url>
+    <content><![CDATA[<!DOCTYPE html><html><head>
+      <title>&#x96C6;&#x6210;&#x5B66;&#x4E60;(Ensemble Learning)</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\sxu\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.5.13\node_modules\@shd101wyy\mume\dependencies\katex\katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h2 class="mume-header" id="%E5%89%8D%E8%A8%80">&#x524D;&#x8A00;</h2>
+
+<p>&#x2002;&#x2002;&#x2002;&#x2002;&#x672C;&#x7BC7;&#x662F;&#x5468;&#x5FD7;&#x534E;&#x897F;&#x74DC;&#x4E66;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x7B14;&#x8BB0;&#xFF0C;&#x7B2C;&#x516B;&#x7AE0;&#x96C6;&#x6210;&#x5B66;&#x4E60;&#x3002;</p>
+<h2 class="mume-header" id="%E4%B8%AA%E4%BD%93%E4%B8%8E%E9%9B%86%E6%88%90">&#x4E2A;&#x4F53;&#x4E0E;&#x96C6;&#x6210;</h2>
+
+<p>&#x2002;&#x2002;&#x2002;&#x2002;&#x96C6;&#x6210;&#x5B66;&#x4E60;&#x901A;&#x8FC7;&#x6784;&#x5EFA;&#x5E76;&#x7ED3;&#x5408;&#x591A;&#x4E2A;&#x5B66;&#x4E60;&#x5668;&#x6765;&#x5B8C;&#x6210;&#x5B66;&#x4E60;&#x4EFB;&#x52A1;&#x3002;<br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x96C6;&#x6210;&#x5B66;&#x4E60;&#x7684;&#x4E00;&#x822C;&#x7ED3;&#x6784;&#x662F;&#xFF1A;&#x5148;&#x4EA7;&#x751F;&#x4E00;&#x7EC4;&#x201C;&#x4E2A;&#x4F53;&#x5B66;&#x4E60;&#x5668;&#x201D;(individual leaner)&#xFF0C;&#x518D;&#x91C7;&#x7528;&#x67D0;&#x79CD;&#x7B56;&#x7565;&#x5C06;&#x4ED6;&#x4EEC;&#x7ED3;&#x5408;&#x8D77;&#x6765;&#x3002;<br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x96C6;&#x6210;&#x5B66;&#x4E60;&#x901A;&#x8FC7;&#x5C06;&#x591A;&#x4E2A;&#x5B66;&#x4E60;&#x5668;&#x8FDB;&#x884C;&#x7ED3;&#x5408;&#xFF0C;&#x5E38;&#x53EF;&#x83B7;&#x5F97;&#x6BD4;&#x5355;&#x4E00;&#x5B66;&#x4E60;&#x5668;&#x663E;&#x8457;&#x4F18;&#x8D8A;&#x7684;&#x5B66;&#x4E60;&#x6027;&#x80FD;&#xFF0C;&#x8FD9;&#x5BF9;&#x201C;&#x5F31;&#x5B66;&#x4E60;&#x5668;(weak leaner)&#x201D;&#x5C24;&#x4E3A;&#x660E;&#x663E;&#x3002;<br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x6839;&#x636E;&#x4E2A;&#x4F53;&#x5B66;&#x4E60;&#x5668;&#x7684;&#x751F;&#x6210;&#x65B9;&#x5F0F;&#xFF0C;&#x76EE;&#x524D;&#x7684;&#x96C6;&#x6210;&#x5B66;&#x4E60;&#x65B9;&#x6CD5;&#x5927;&#x81F4;&#x53EF;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;&#xFF1A;&#x4E2A;&#x4F53;&#x5B66;&#x4E60;&#x5668;&#x5B58;&#x5728;&#x5F3A;&#x4F9D;&#x8D56;&#x5173;&#x7CFB;&#x3001;&#x5FC5;&#x987B;&#x4E32;&#x884C;&#x751F;&#x6210;&#x7684;&#x5E8F;&#x5217;&#x5316;&#x65B9;&#x6CD5;(&#x4EE3;&#x8868;&#x662F;Boosting);&#x4E2A;&#x4F53;&#x5B66;&#x4E60;&#x5668;&#x95F4;&#x4E0D;&#x5B58;&#x5728;&#x5F3A;&#x4F9D;&#x8D56;&#x5173;&#x7CFB;&#x3001;&#x53EF;&#x540C;&#x65F6;&#x751F;&#x6210;&#x7684;&#x5E76;&#x884C;&#x5316;&#x65B9;&#x6CD5;(&#x4EE3;&#x8868;&#x662F;Bagging&#x548C;&#x201C;&#x968F;&#x673A;&#x68EE;&#x6797;&#x201D;(Random Forest))</p>
+<h2 class="mume-header" id="boosting">Boosting</h2>
+
+<p>&#x2002;&#x2002;&#x2002;&#x2002;Boosting&#x662F;&#x4E00;&#x65CF;&#x53EF;&#x5C06;&#x5F31;&#x5B66;&#x4E60;&#x5668;&#x63D0;&#x5347;&#x4E3A;&#x5F3A;&#x5B66;&#x4E60;&#x5668;&#x7684;&#x7B97;&#x6CD5;&#x3002;&#x7B97;&#x6CD5;&#x673A;&#x5236;&#xFF1A;&#x5148;&#x4ECE;&#x521D;&#x59CB;&#x8BAD;&#x7EC3;&#x96C6;&#x8BAD;&#x7EC3;&#x51FA;&#x4E00;&#x4E2A;&#x57FA;&#x5B66;&#x4E60;&#x5668;&#xFF0C;&#x518D;&#x6839;&#x636E;&#x57FA;&#x5B66;&#x4E60;&#x5668;&#x7684;&#x8868;&#x73B0;&#x5BF9;&#x8BAD;&#x7EC3;&#x6837;&#x672C;&#x5206;&#x5E03;&#x8FDB;&#x884C;&#x8C03;&#x6574;&#xFF0C;&#x4F7F;&#x5F97;&#x5148;&#x524D;&#x6837;&#x672C;&#x5728;&#x540E;&#x7EED;&#x53D7;&#x5230;&#x66F4;&#x591A;&#x5173;&#x6CE8;&#xFF0C;&#x7136;&#x540E;&#x57FA;&#x4E8E;&#x8C03;&#x6574;&#x540E;&#x7684;&#x6837;&#x672C;&#x5206;&#x5E03;&#x6765;&#x8BAD;&#x7EC3;&#x4E0B;&#x4E00;&#x4E2A;&#x57FA;&#x5B66;&#x4E60;&#x5668;&#xFF1B;&#x5982;&#x6B64;&#x91CD;&#x590D;&#x8FDB;&#x884C;&#xFF0C;&#x76F4;&#x81F3;&#x57FA;&#x5B66;&#x4E60;&#x5668;&#x6570;&#x76EE;&#x8FBE;&#x5230;&#x4E8B;&#x5148;&#x5236;&#x5B9A;&#x7684;&#x503C;T&#xFF0C;&#x6700;&#x7EC8;&#x5C06;&#x8FD9;T&#x4E2A;&#x989D;&#x57FA;&#x5B66;&#x4E60;&#x5668;&#x8FDB;&#x884C;&#x52A0;&#x6743;&#x7ED3;&#x5408;&#x3002;<br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x6807;&#x51C6;AdaBoost&#x7B97;&#x6CD5;&#x9002;&#x7528;&#x4E8E;&#x4E8C;&#x5206;&#x7C7B;&#x4EFB;&#x52A1;&#xFF0C;&#x6709;&#x591A;&#x79CD;&#x63A8;&#x5BFC;&#x65B9;&#x5F0F;&#xFF0C;&#x5BB9;&#x6613;&#x7406;&#x89E3;&#x7684;&#x662F;&#x57FA;&#x4E8E;&#x201C;&#x52A0;&#x6027;&#x6A21;&#x578B;&#x201D;&#x6765;&#x6700;&#x5C0F;&#x5316;&#x6307;&#x6570;&#x635F;&#x5931;&#x51FD;&#x6570;&#x3002;</p>
+<blockquote>
+<hr>
+<p>&#x8F93;&#x5165;&#xFF1A;&#x8BAD;&#x7EC3;&#x96C6;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><mrow><mo fence="true">{</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">x</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>y</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">x</mi><mi>m</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>m</mi></msub><mo stretchy="false">)</mo><mo fence="true">}</mo></mrow></mrow><annotation encoding="application/x-tex">D=\left\{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\right\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">{</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">m</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">m</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;">}</span></span></span></span></span><br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x57FA;&#x5B66;&#x4E60;&#x7B97;&#x6CD5;<br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x8BAD;&#x7EC3;&#x8F6E;&#x6570;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>.<br>
+&#x8FC7;&#x7A0B;&#xFF1A;<br>
+1: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">D</mi><mo>=</mo><mn>1</mn><mi mathvariant="normal">/</mi><mi>m</mi></mrow><annotation encoding="application/x-tex">\mathcal{D}=1/m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">D</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mord">/</span><span class="mord mathdefault">m</span></span></span></span>.<br>
+2: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mrow><mi mathvariant="bold-italic">f</mi><mi mathvariant="bold-italic">o</mi><mi mathvariant="bold-italic">r</mi></mrow></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{for}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.11042em;">f</span><span class="mord boldsymbol">o</span><span class="mord boldsymbol" style="margin-right:0.03194em;">r</span></span></span></span></span></span> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>T</mi></mrow><annotation encoding="application/x-tex">t = 1,2,...,T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathdefault">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mrow><mi mathvariant="bold-italic">d</mi><mi mathvariant="bold-italic">o</mi></mrow></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{do}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">d</span><span class="mord boldsymbol">o</span></span></span></span></span></span><br>
+3:&#x2002;&#x2002;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>t</mi></msub><mo>=</mo><mi mathvariant="fraktur">L</mi><mo stretchy="false">(</mo><mi>D</mi><mo separator="true">,</mo><msub><mi mathvariant="script">D</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mo separator="true">;</mo></mrow><annotation encoding="application/x-tex">h_t=\mathfrak{L}(D,\mathcal{D}_t);</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathfrak">L</span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">D</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mpunct">;</span></span></span></span><br>
+4:&#x2002;&#x2002;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>&#x3F5;</mi><mo>=</mo><msub><mi>P</mi><mrow><mi mathvariant="bold-italic">x</mi><mo>&#x223C;</mo><mi mathvariant="script">D</mi></mrow></msub><mo stretchy="false">(</mo><msub><mi>h</mi><mi>t</mi></msub><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=&#x338;</mo><mrow><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo></mrow><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\epsilon=P_{\boldsymbol{x}\sim\mathcal{D}}(h_t(\boldsymbol{x})\not ={f(\boldsymbol{x})})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">&#x3F5;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord boldsymbol mtight">x</span></span></span><span class="mrel mtight">&#x223C;</span><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.02778em;">D</span></span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mord"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="rlap"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="inner"><span class="mrel">&#xE020;</span></span><span class="fix"></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span></span></span><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span></span><span class="mclose">)</span></span></span></span>;<br>
+5:&#x2002;&#x2002;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mrow><mi mathvariant="bold-italic">i</mi><mi mathvariant="bold-italic">f</mi></mrow></mi><mtext>&#xA0;</mtext><msub><mi>&#x3F5;</mi><mi>t</mi></msub><mo>&gt;</mo><mn>0.5</mn><mtext>&#xA0;</mtext><mi><mrow><mi mathvariant="bold-italic">t</mi><mi mathvariant="bold-italic">h</mi><mi mathvariant="bold-italic">e</mi><mi mathvariant="bold-italic">n</mi><mtext>&#xA0;</mtext><mi mathvariant="bold-italic">b</mi><mi mathvariant="bold-italic">r</mi><mi mathvariant="bold-italic">e</mi><mi mathvariant="bold-italic">a</mi><mi mathvariant="bold-italic">k</mi></mrow></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{if}\ \epsilon_t&gt;0.5\ \boldsymbol{then\ break}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">i</span><span class="mord boldsymbol" style="margin-right:0.11042em;">f</span></span></span><span class="mspace">&#xA0;</span><span class="mord"><span class="mord mathdefault">&#x3F5;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">5</span><span class="mspace">&#xA0;</span><span class="mord"><span class="mord"><span class="mord boldsymbol">t</span><span class="mord boldsymbol">h</span><span class="mord boldsymbol">e</span><span class="mord boldsymbol">n</span><span class="mspace">&#xA0;</span><span class="mord boldsymbol">b</span><span class="mord boldsymbol" style="margin-right:0.03194em;">r</span><span class="mord boldsymbol">e</span><span class="mord boldsymbol">a</span><span class="mord boldsymbol" style="margin-right:0.01852em;">k</span></span></span></span></span></span><br>
+6:&#x2003;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>&#x3B1;</mi><mi>t</mi></msub><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>l</mi><mi>n</mi><mo stretchy="false">(</mo><mfrac><mrow><mn>1</mn><mo>&#x2212;</mo><msub><mi>&#x3F5;</mi><mi>t</mi></msub></mrow><msub><mi>&#x3F5;</mi><mi>t</mi></msub></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\alpha_t=\frac{1}{2}ln(\frac{1-\epsilon_t}{\epsilon_t})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">&#x3B1;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.3063079999999998em;vertical-align:-0.44509999999999994em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">n</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8612079999999999em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight">&#x3F5;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.29634285714285713em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4101em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">&#x2212;</span><span class="mord mtight"><span class="mord mathdefault mtight">&#x3F5;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.29634285714285713em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.44509999999999994em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span>;<br>
+7:&#x2003;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">D</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><msub><mi mathvariant="script">D</mi><mi>t</mi></msub><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo></mrow><msub><mi>Z</mi><mi>t</mi></msub></mfrac><mo>&#xD7;</mo><mrow><mo fence="true">{</mo><mtable rowspacing="0.3599999999999999em" columnalign="left left" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false">(</mo><mo>&#x2212;</mo><msub><mi>&#x3B1;</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mspace width="1em"></mspace><mtext>if&#xA0;</mtext><msub><mi>h</mi><mi>t</mi></msub><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>e</mi><mi>x</mi><mi>p</mi><mo stretchy="false">(</mo><msub><mi>&#x3B1;</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mspace width="1em"></mspace><mtext>if&#xA0;</mtext><msub><mi>h</mi><mi>t</mi></msub><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=&#x338;</mo><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">\mathcal{D}_{t+1}(\boldsymbol{x})=\frac{\mathcal{D}_t(\boldsymbol{x})}{Z_t}\times
+  \begin{cases}
+    exp(-\alpha_t)       &amp; \quad \text{if } h_t(\boldsymbol{x})=f(\boldsymbol{x}) \\
+    exp(\alpha_t)  &amp; \quad \text{if }  h_t(\boldsymbol{x})\not=f(\boldsymbol{x})
+  \end{cases}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">D</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.4550999999999998em;vertical-align:-0.44509999999999994em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">Z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.29634285714285713em;"><span style="top:-2.357em;margin-left:-0.07153em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.02778em;">D</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.29634285714285713em;"><span style="top:-2.357em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mtight"><span class="mord boldsymbol mtight">x</span></span></span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.44509999999999994em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">&#xD7;</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:3.0000299999999998em;vertical-align:-1.25003em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">{</span></span><span class="mord"><span class="mtable"><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="mord mathdefault">x</span><span class="mord mathdefault">p</span><span class="mopen">(</span><span class="mord">&#x2212;</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">&#x3B1;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="mord mathdefault">x</span><span class="mord mathdefault">p</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">&#x3B1;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:1em;"></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.69em;"><span style="top:-3.69em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mspace" style="margin-right:1em;"></span><span class="mord text"><span class="mord">if&#xA0;</span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.008em;"></span><span class="mord"><span class="mspace" style="margin-right:1em;"></span><span class="mord text"><span class="mord">if&#xA0;</span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mord"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.69444em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="rlap"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="inner"><span class="mrel">&#xE020;</span></span><span class="fix"></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:1.19em;"><span></span></span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span><br>
+8: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mrow><mi mathvariant="bold-italic">e</mi><mi mathvariant="bold-italic">n</mi><mi mathvariant="bold-italic">d</mi><mtext>&#xA0;</mtext><mi mathvariant="bold-italic">f</mi><mi mathvariant="bold-italic">o</mi><mi mathvariant="bold-italic">r</mi></mrow></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{end\ for}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">e</span><span class="mord boldsymbol">n</span><span class="mord boldsymbol">d</span><span class="mspace">&#xA0;</span><span class="mord boldsymbol" style="margin-right:0.11042em;">f</span><span class="mord boldsymbol">o</span><span class="mord boldsymbol" style="margin-right:0.03194em;">r</span></span></span></span></span></span><br>
+&#x8F93;&#x51FA;&#xFF1A;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>s</mi><mi>i</mi><mi>g</mi><mi>n</mi><mo fence="false">(</mo><msubsup><mo>&#x2211;</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></msubsup><msub><mi>&#x3B1;</mi><mi>t</mi></msub><msub><mi>h</mi><mi>t</mi></msub><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo fence="false">)</mo></mrow><annotation encoding="application/x-tex">H(\boldsymbol{x})=sign\big(\sum^T_{t=1}\alpha_th_t(\boldsymbol{x})\big)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.331241em;vertical-align:-0.35001em;"></span><span class="mord mathdefault">s</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">n</span><span class="mord"><span class="delimsizing size1">(</span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">&#x2211;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.981231em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.29971000000000003em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">&#x3B1;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span><span class="mord"><span class="delimsizing size1">)</span></span></span></span></span></p>
+<hr>
+</blockquote>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>d</mi><mi>a</mi><mi>o</mi><mi>o</mi><mi>s</mi><mi>t</mi><mtext>&#x7B97;&#x6CD5;</mtext></mrow><annotation encoding="application/x-tex">Adaoost&#x7B97;&#x6CD5;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">A</span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">o</span><span class="mord mathdefault">o</span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span><span class="mord cjk_fallback">&#x7B97;</span><span class="mord cjk_fallback">&#x6CD5;</span></span></span></span></span></p>
+<h2 class="mume-header" id="bagging%E4%B8%8E%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97">Bagging&#x4E0E;&#x968F;&#x673A;&#x68EE;&#x6797;</h2>
+
+<p>&#x2003;Bagging&#x662F;&#x5E76;&#x884C;&#x5F0F;&#x96C6;&#x6210;&#x5B66;&#x4E60;&#x6700;&#x8457;&#x540D;&#x7684;&#x4EE3;&#x8868;&#xFF0C;&#x5B83;&#x76F4;&#x63A5;&#x57FA;&#x4E8E;&#x81EA;&#x4E3B;&#x91C7;&#x6837;&#x6CD5;(boostrap sampling)</p>
+<blockquote>
+<hr>
+<p>&#x8F93;&#x5165;&#xFF1A;&#x8BAD;&#x7EC3;&#x96C6;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>=</mo><mrow><mo fence="true">{</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">x</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>y</mi><mn>2</mn></msub><mo stretchy="false">)</mo><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">x</mi><mi>m</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>m</mi></msub><mo stretchy="false">)</mo><mo fence="true">}</mo></mrow></mrow><annotation encoding="application/x-tex">D=\left\{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\right\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">{</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">m</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">m</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;">}</span></span></span></span></span><br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x57FA;&#x5B66;&#x4E60;&#x7B97;&#x6CD5;<br>
+&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x2002;&#x8BAD;&#x7EC3;&#x8F6E;&#x6570;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>.<br>
+&#x8FC7;&#x7A0B;&#xFF1A;<br>
+1: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mrow><mi mathvariant="bold-italic">f</mi><mi mathvariant="bold-italic">o</mi><mi mathvariant="bold-italic">r</mi></mrow></mi><mtext>&#xA0;</mtext><mi>t</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>T</mi><mtext>&#xA0;</mtext><mi><mrow><mi mathvariant="bold-italic">d</mi><mi mathvariant="bold-italic">o</mi></mrow></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{for}\ t=1,2,...,T\ \boldsymbol{do}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.11042em;">f</span><span class="mord boldsymbol">o</span><span class="mord boldsymbol" style="margin-right:0.03194em;">r</span></span></span><span class="mspace">&#xA0;</span><span class="mord mathdefault">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace">&#xA0;</span><span class="mord"><span class="mord"><span class="mord boldsymbol">d</span><span class="mord boldsymbol">o</span></span></span></span></span></span><br>
+2: &#x2003;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>t</mi></msub><mo>=</mo><mi mathvariant="fraktur">L</mi><mo stretchy="false">(</mo><mi>D</mi><mo separator="true">,</mo><msub><mi mathvariant="script">D</mi><mrow><mi>b</mi><mi>s</mi></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">h_t=\mathfrak{L}(D,\mathcal{D}_{bs})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathfrak">L</span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">D</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight">s</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span><br>
+3: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mrow><mi mathvariant="bold-italic">e</mi><mi mathvariant="bold-italic">n</mi><mi mathvariant="bold-italic">d</mi><mtext>&#xA0;</mtext><mi mathvariant="bold-italic">f</mi><mi mathvariant="bold-italic">o</mi><mi mathvariant="bold-italic">r</mi></mrow></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{end\ for}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">e</span><span class="mord boldsymbol">n</span><span class="mord boldsymbol">d</span><span class="mspace">&#xA0;</span><span class="mord boldsymbol" style="margin-right:0.11042em;">f</span><span class="mord boldsymbol">o</span><span class="mord boldsymbol" style="margin-right:0.03194em;">r</span></span></span></span></span></span><br>
+&#x8F93;&#x51FA;&#xFF1A;<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mi><munder><mo><mi>a</mi><mi>r</mi><mi>g</mi><mtext>&#xA0;</mtext><mi>m</mi><mi>a</mi><mi>x</mi></mo><mrow><mi>y</mi><mo>&#x2208;</mo><mi mathvariant="script">Y</mi></mrow></munder></mi><msubsup><mo>&#x2211;</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></msubsup><mi mathvariant="double-struck">I</mi><mo stretchy="false">(</mo><msub><mi>h</mi><mi>t</mi></msub><mo stretchy="false">(</mo><mi mathvariant="bold-italic">x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.0561100000000003em;vertical-align:-1.0748790000000001em;"></span><span class="mord"><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.43055999999999983em;"><span style="top:-2.161229em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span><span class="mrel mtight">&#x2208;</span><span class="mord mtight"><span class="mord mathcal mtight" style="margin-right:0.08222em;">Y</span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop"><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mspace">&#xA0;</span><span class="mord mathdefault">ma</span><span class="mord mathdefault">x</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:1.0748790000000001em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:-0.0000050000000000050004em;">&#x2211;</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.981231em;"><span style="top:-2.40029em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.29971000000000003em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathbb">I</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span></p>
+<hr>
+</blockquote>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mi>a</mi><mi>g</mi><mi>g</mi><mi>i</mi><mi>n</mi><mi>g</mi><mtext>&#x7B97;&#x6CD5;</mtext></mrow><annotation encoding="application/x-tex">Bagging&#x7B97;&#x6CD5;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord cjk_fallback">&#x7B97;</span><span class="mord cjk_fallback">&#x6CD5;</span></span></span></span></span><br>
+Bagging&#x80FD;&#x4E0D;&#x7ECF;&#x4FEE;&#x6539;&#x5730;&#x7528;&#x4E8E;&#x591A;&#x5206;&#x7C7B;&#x3001;&#x56DE;&#x5F52;&#x4EFB;&#x52A1;&#x3002;<br>
+&#x968F;&#x673A;&#x68EE;&#x6797;(Random Forest&#xFF0C;&#x7B80;&#x79F0;RF)&#x662F;Bagging&#x7684;&#x4E00;&#x4E2A;&#x6269;&#x5C55;&#x53D8;&#x4F53;&#x3002;RF&#x5728;&#x4EE5;&#x51B3;&#x7B56;&#x6811;&#x4E3A;&#x57FA;&#x5B66;&#x4E60;&#x5668;&#x6784;&#x5EFA;Bagging&#x96C6;&#x6210;&#x7684;&#x57FA;&#x7840;&#x4E0A;&#xFF0C;&#x8FDB;&#x4E00;&#x6B65;&#x5728;&#x51B3;&#x7B56;&#x6811;&#x7684;&#x8BAD;&#x7EC3;&#x8FC7;&#x7A0B;&#x4E2D;&#x5F15;&#x5165;&#x4E86;&#x968F;&#x673A;&#x5C5E;&#x6027;&#x7684;&#x9009;&#x62E9;&#x3002;<br>
+&#x968F;&#x673A;&#x68EE;&#x6797;&#x7684;&#x8BAD;&#x7EC3;&#x6548;&#x7387;&#x901A;&#x5E38;&#x4F18;&#x4E8E;Bagging&#xFF0C;&#x56E0;&#x4E3A;&#x5728;&#x4E2A;&#x4F53;&#x51B3;&#x7B56;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#xFF0C;Bagging&#x4F7F;&#x7528;&#x7684;&#x662F;&#x201C;&#x786E;&#x5B9A;&#x578B;&#x201D;&#x51B3;&#x7B56;&#x6811;&#xFF0C;&#x5728;&#x9009;&#x62E9;&#x5212;&#x5206;&#x5C5E;&#x6027;&#x65F6;&#x8981;&#x5BF9;&#x6240;&#x6709;&#x8282;&#x70B9;&#x7684;&#x6240;&#x6709;&#x5C5E;&#x6027;&#x8FDB;&#x884C;&#x8003;&#x5BDF;&#xFF0C;&#x800C;&#x968F;&#x673A;&#x68EE;&#x6797;&#x4F7F;&#x7528;&#x7684;&#x201C;&#x968F;&#x673A;&#x578B;&#x201D;&#x51B3;&#x7B56;&#x6811;&#x5219;&#x53EA;&#x9700;&#x8003;&#x5BDF;&#x4E00;&#x4E2A;&#x5C5E;&#x6027;&#x5B50;&#x96C6;&#x3002;</p>
+<h2 class="mume-header" id="%E7%BB%93%E5%90%88%E7%AD%96%E7%95%A5">&#x7ED3;&#x5408;&#x7B56;&#x7565;</h2>
+
+<p>&#x5E73;&#x5747;&#x6CD5;&#xFF1A;&#x7B80;&#x5355;&#x5E73;&#x5747;&#x6CD5;&#x3001;&#x52A0;&#x6743;&#x5E73;&#x5747;&#x6CD5;<br>
+&#x6295;&#x7968;&#x6CD5;&#xFF1A;&#x7EDD;&#x5BF9;&#x591A;&#x6570;&#x6295;&#x7968;&#x6CD5;&#x3001;&#x76F8;&#x5BF9;&#x591A;&#x6570;&#x6295;&#x7968;&#x6CD5;&#x3001;&#x52A0;&#x6743;&#x6295;&#x7968;&#x6CD5;</p>
+<h2 class="mume-header" id="reference">Reference</h2>
+
+<p>&#x5468;&#x5FD7;&#x534E;&#xFF0C;&#x673A;&#x5668;&#x5B66;&#x4E60;</p>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
   
-  
-    
-    <entry>
-      <title>Latex Math</title>
-      <link href="/2020/10/04/LatexMath/"/>
-      <url>/2020/10/04/LatexMath/</url>
-      
-        <content type="html"><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>This article shows how to use latex to write math functions.</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.latex-project.org/" target="_blank" rel="noopener">latex-project.org</a><br><a href="https://www.latex-project.org/help/documentation/amsldoc.pdf" target="_blank" rel="noopener">User’s Guide for the amsmath Package (Version 2.1)</a><br><a href="https://www.caam.rice.edu/~heinken/latex/symbols.pdf" target="_blank" rel="noopener">LATEX Mathematical Symbols</a><br><a href="https://en.wikibooks.org/wiki/LaTeX/Mathematics" target="_blank" rel="noopener">LaTeX/Mathematics</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Tools </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Latex </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>集成学习(Ensemble Learning)</title>
-      <link href="/2020/10/04/EnsembleLearning/"/>
-      <url>/2020/10/04/EnsembleLearning/</url>
-      
-        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&ensp;&ensp;&ensp;&ensp;本篇是周志华西瓜书机器学习笔记，第八章集成学习。</p><h2 id="个体与集成"><a href="#个体与集成" class="headerlink" title="个体与集成"></a>个体与集成</h2><p>&ensp;&ensp;&ensp;&ensp;集成学习通过构建并结合多个学习器来完成学习任务。<br>&ensp;&ensp;&ensp;&ensp;集成学习的一般结构是：先产生一组“个体学习器”(individual leaner)，再采用某种策略将他们结合起来。<br>&ensp;&ensp;&ensp;&ensp;集成学习通过将多个学习器进行结合，常可获得比单一学习器显著优越的学习性能，这对“弱学习器(weak leaner)”尤为明显。<br>&ensp;&ensp;&ensp;&ensp;根据个体学习器的生成方式，目前的集成学习方法大致可分为两类：个体学习器存在强依赖关系、必须串行生成的序列化方法(代表是Boosting);个体学习器间不存在强依赖关系、可同时生成的并行化方法(代表是Bagging和“随机森林”(Random Forest))</p><h2 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h2><p>&ensp;&ensp;&ensp;&ensp;Boosting是一族可将弱学习器提升为强学习器的算法。算法机制：先从初始训练集训练出一个基学习器，再根据基学习器的表现对训练样本分布进行调整，使得先前样本在后续受到更多关注，然后基于调整后的样本分布来训练下一个基学习器；如此重复进行，直至基学习器数目达到事先制定的值T，最终将这T个额基学习器进行加权结合。<br>&ensp;&ensp;&ensp;&ensp;标准AdaBoost算法适用于二分类任务，有多种推导方式，容易理解的是基于“加性模型”来最小化指数损失函数。</p><blockquote><hr><p>输入：训练集$D=\left{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),…,(\boldsymbol x_m,y_m)\right}$<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;基学习算法<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;训练轮数$T$.<br>过程：<br>1: $\mathcal{D}=1/m$.<br>2: $\boldsymbol{for}$ $t = 1,2,…,T$$ \boldsymbol{do}$<br>3:&ensp;&ensp;$h_t=\mathfrak{L}(D,\mathcal{D}_t);$<br>4:&ensp;&ensp;$\epsilon=P_{\boldsymbol{x}\sim\mathcal{D}}(h_t(\boldsymbol{x})\not ={f(\boldsymbol{x})})$;<br>5:&ensp;&ensp;$\boldsymbol{if}\ \epsilon_t&gt;0.5\ \boldsymbol{then\ break}$<br>6:&emsp;$\alpha_t=\frac{1}{2}ln(\frac{1-\epsilon_t}{\epsilon_t})$;<br>7:&emsp;$\mathcal{D}_{t+1}(\boldsymbol{x})=\frac{\mathcal{D}_t(\boldsymbol{x})}{Z_t}\times<br>  \begin{cases}<br>    exp(-\alpha_t)       &amp; \quad \text{if } h_t(\boldsymbol{x})=f(\boldsymbol{x}) \<br>    exp(\alpha_t)  &amp; \quad \text{if }  h_t(\boldsymbol{x})\not=f(\boldsymbol{x})<br>  \end{cases}$<br>8: $\boldsymbol{end\ for}$<br>输出：$H(\boldsymbol{x})=sign\big(\sum^T_{t=1}\alpha_th_t(\boldsymbol{x})\big)$</p><hr><script type="math/tex; mode=display">Adaoost算法</script><h2 id="Bagging与随机森林"><a href="#Bagging与随机森林" class="headerlink" title="Bagging与随机森林"></a>Bagging与随机森林</h2><p>&emsp;Bagging是并行式集成学习最著名的代表，它直接基于自主采样法(boostrap sampling)</p><hr><p>输入：训练集$D=\left{(\boldsymbol x_1,y_1),(\boldsymbol x_2,y_2),…,(\boldsymbol x_m,y_m)\right}$<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;基学习算法<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;训练轮数$T$.<br>过程：<br>1: $\boldsymbol{for}\ t=1,2,…,T\ \boldsymbol{do}$<br>2: &emsp;$h_t=\mathfrak{L}(D,\mathcal{D}_{bs})$<br>3: $\boldsymbol{end\ for}$<br>输出：$H(\boldsymbol{x})=\underset{y\in\mathcal{Y}}{arg\ max}\sum^T_{t=1}\mathbb{I}(h_t(\boldsymbol{x})=y)$</p><hr><script type="math/tex; mode=display">Bagging算法</script><p>Bagging能不经修改地用于多分类、回归任务。<br>随机森林(Random Forest，简称RF)是Bagging的一个扩展变体。RF在以决策树为基学习器构建Bagging集成的基础上，进一步在决策树的训练过程中引入了随机属性的选择。<br>随机森林的训练效率通常优于Bagging，因为在个体决策的过程中，Bagging使用的是“确定型”决策树，在选择划分属性时要对所有节点的所有属性进行考察，而随机森林使用的“随机型”决策树则只需考察一个属性子集。</p><h2 id="结合策略"><a href="#结合策略" class="headerlink" title="结合策略"></a>结合策略</h2><p>平均法：简单平均法、加权平均法<br>投票法：绝对多数投票法、相对多数投票法、加权投票法</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>周志华，机器学习</p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> Machine Learning </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Machine Learning </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>How To Use Git</title>
-      <link href="/2020/09/30/HowToUseGit/"/>
-      <url>/2020/09/30/HowToUseGit/</url>
-      
-        <content type="html"><![CDATA[<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.</p><h2 id="Main-porcelain-commands"><a href="#Main-porcelain-commands" class="headerlink" title="Main porcelain commands"></a>Main porcelain commands</h2><p>&gt;</p><blockquote><p>git-add[1]<br>Add file contents to the index</p><p>git-am[1]<br>Apply a series of patches from a mailbox</p><p>git-archive[1]<br>Create an archive of files from a named tree</p><p>git-bisect[1]<br>Use binary search to find the commit that introduced a bug</p><p>git-branch[1]<br>List, create, or delete branches</p><p>git-bundle[1]<br>Move objects and refs by archive</p><p>git-checkout[1]<br>Switch branches or restore working tree files</p><p>git-cherry-pick[1]<br>Apply the changes introduced by some existing commits</p><p>git-citool[1]<br>Graphical alternative to git-commit</p><p>git-clean[1]<br>Remove untracked files from the working tree</p><p>git-clone[1]<br>Clone a repository into a new directory</p><p>git-commit[1]<br>Record changes to the repository</p><p>git-describe[1]<br>Give an object a human readable name based on an available ref</p><p>git-diff[1]<br>Show changes between commits, commit and working tree, etc</p><p>git-fetch[1]<br>Download objects and refs from another repository</p><p>git-format-patch[1]<br>Prepare patches for e-mail submission</p><p>git-gc[1]<br>Cleanup unnecessary files and optimize the local repository</p><p>git-grep[1]<br>Print lines matching a pattern</p><p>git-gui[1]<br>A portable graphical interface to Git</p><p>git-init[1]<br>Create an empty Git repository or reinitialize an existing one</p><p>gitk[1]<br>The Git repository browser</p><p>git-log[1]<br>Show commit logs</p><p>git-merge[1]<br>Join two or more development histories together</p><p>git-mv[1]<br>Move or rename a file, a directory, or a symlink</p><p>git-notes[1]<br>Add or inspect object notes</p><p>git-pull[1]<br>Fetch from and integrate with another repository or a local branch</p><p>git-push[1]<br>Update remote refs along with associated objects</p><p>git-range-diff[1]<br>Compare two commit ranges (e.g. two versions of a branch)</p><p>git-rebase[1]<br>Reapply commits on top of another base tip</p><p>git-reset[1]<br>Reset current HEAD to the specified state</p><p>git-restore[1]<br>Restore working tree files</p><p>git-revert[1]<br>Revert some existing commits</p><p>git-rm[1]<br>Remove files from the working tree and from the index</p><p>git-shortlog[1]<br>Summarize git log output</p><p>git-show[1]<br>Show various types of objects</p><p>git-sparse-checkout[1]<br>Initialize and modify the sparse-checkout</p><p>git-stash[1]<br>Stash the changes in a dirty working directory away</p><p>git-status[1]<br>Show the working tree status</p><p>git-submodule[1]<br>Initialize, update or inspect submodules</p><p>git-switch[1]<br>Switch branches</p><p>git-tag[1]<br>Create, list, delete or verify a tag object signed with GPG</p><p>git-worktree[1]<br>Manage multiple working trees</p><p>Ancillary Commands<br>Manipulators:</p><p>git-config[1]<br>Get and set repository or global options</p><p>git-fast-export[1]<br>Git data exporter</p><p>git-fast-import[1]<br>Backend for fast Git data importers</p><p>git-filter-branch[1]<br>Rewrite branches</p><p>git-mergetool[1]<br>Run merge conflict resolution tools to resolve merge conflicts</p><p>git-pack-refs[1]<br>Pack heads and tags for efficient repository access</p><p>git-prune[1]<br>Prune all unreachable objects from the object database</p><p>git-reflog[1]<br>Manage reflog information</p><p>git-remote[1]<br>Manage set of tracked repositories</p><p>git-repack[1]<br>Pack unpacked objects in a repository</p><p>git-replace[1]<br>Create, list, delete refs to replace objects</p><p>Interrogators:</p><p>git-annotate[1]<br>Annotate file lines with commit information</p><p>git-blame[1]<br>Show what revision and author last modified each line of a file</p><p>git-bugreport[1]<br>Collect information for user to file a bug report</p><p>git-count-objects[1]<br>Count unpacked number of objects and their disk consumption</p><p>git-difftool[1]<br>Show changes using common diff tools</p><p>git-fsck[1]<br>Verifies the connectivity and validity of the objects in the database</p><p>git-help[1]<br>Display help information about Git</p><p>git-instaweb[1]<br>Instantly browse your working repository in gitweb</p><p>git-merge-tree[1]<br>Show three-way merge without touching index</p><p>git-rerere[1]<br>Reuse recorded resolution of conflicted merges</p><p>git-show-branch[1]<br>Show branches and their commits</p><p>git-verify-commit[1]<br>Check the GPG signature of commits</p><p>git-verify-tag[1]<br>Check the GPG signature of tags</p><p>gitweb[1]<br>Git web interface (web frontend to Git repositories)</p><p>git-whatchanged[1]<br>Show logs with difference each commit introduces</p></blockquote><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://git-scm.com/" target="_blank" rel="noopener">git-sem.com</a><br><a href="https://git-scm.com/docs/git#_git_commands" target="_blank" rel="noopener">GitDoc</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Tools </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Git </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Attention Is All You Need</title>
-      <link href="/2020/09/30/AttentionIsAllYouNeed/"/>
-      <url>/2020/09/30/AttentionIsAllYouNeed/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> Machine Learning </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Machine Learning </tag>
-            
-            <tag> Deep Learning </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Markdown语法</title>
-      <link href="/2020/09/28/Markdown%E8%AF%AD%E6%B3%95/"/>
-      <url>/2020/09/28/Markdown%E8%AF%AD%E6%B3%95/</url>
-      
-        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这篇文章主要是<a href="https://www.runoob.com/markdown/" target="_blank" rel="noopener">runoob.com</a> Markdown语法笔记,待完善。</p><h2 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h2><p>使用#来表示标题。</p><pre><code># 一级标题## 二级标题### 三级标题#### 四级标题##### 五级标题###### 六级标题</code></pre><blockquote><h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4><h5 id="五级标题"><a href="#五级标题" class="headerlink" title="五级标题"></a>五级标题</h5><h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6></blockquote><h2 id="段落"><a href="#段落" class="headerlink" title="段落"></a>段落</h2><p>使用空行换段。</p><pre><code>这样  换段</code></pre><blockquote><p>这样</p><p>换段</p></blockquote><h2 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h2><p>按照以下方式改变字体。</p><pre><code>*斜体文本*_斜体文本_**粗体文本**__粗体文本__***粗斜体文本***___粗斜体文本___</code></pre><blockquote><p><em>斜体文本</em><br>_斜体文本_<br><strong>粗体文本</strong><br><strong>粗体文本</strong><br><strong><em>粗斜体文本</em></strong><br><strong>_粗斜体文本_</strong></p></blockquote><h2 id="分隔线"><a href="#分隔线" class="headerlink" title="分隔线"></a>分隔线</h2><pre><code>**** * ******- - -----------</code></pre><blockquote><p><em>斜体文本</em><br>_斜体文本_<br><strong>粗体文本</strong><br><strong>粗体文本</strong><br><strong><em>粗斜体文本</em></strong><br><strong>_粗斜体文本_</strong></p></blockquote><h2 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h2><p>删除线使用”~~~~”表示</p><blockquote><p><del>这是删除线</del></p><h2 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h2><pre><code>&lt;u&gt;这是下划线文本&lt;/u&gt;</code></pre><p><u></p></blockquote><h2 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h2><pre><code>创建脚注格式类似这样 [^1]。</code></pre><blockquote id="fn_1"><sup>1</sup>. 这是脚注。<a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a></blockquote><h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><pre><code>* 第一项* 第二项* 第三项+ 第一项+ 第二项+ 第三项- 第一项- 第二项- 第三项1. 第一项    - a    - b2. 第二项    - c    - d</code></pre><blockquote><ul><li>第一项</li><li>第二项</li><li>第三项</li></ul><ul><li>第一项</li><li>第二项</li><li>第三项</li></ul><ul><li>第一项</li><li>第二项</li><li>第三项</li></ul><ol><li>第一项<ul><li>a</li><li>b</li></ul></li><li>第二项<ul><li>c</li><li>d</li></ul></li></ol></blockquote><h2 id="区块引用"><a href="#区块引用" class="headerlink" title="区块引用"></a>区块引用</h2><pre><code>&gt; 这是&gt; 区块&gt; 引用&gt; 这是&gt;&gt; 区块&gt;&gt;&gt; 引用&gt; 区块中使用列表&gt; 1. 第一项&gt; 2. 第二项&gt; + 第一项&gt; + 第二项&gt; + 第三项* 第一项    &gt; 这是    &gt; 区块* 第二项</code></pre><blockquote><p>这是<br>区块<br>引用</p><p>这是</p><blockquote><p>区块</p><blockquote><p>引用</p></blockquote></blockquote><p>区块中使用列表</p><ol><li>第一项</li><li>第二项</li></ol><ul><li>第一项</li><li>第二项</li><li>第三项</li></ul><ul><li>第一项<br>这是<br>区块</li><li>第二项</li></ul></blockquote><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>使用<code>`包围。</code>print()` 函数</p><figure class="highlight plain"><figcaption><span>install tensorflow```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#96;&#96;&#96;print(&quot;hello&quot;)</span><br></pre></td></tr></table></figure><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"hello"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><pre><code>这是一个链接[链接到参考文件](https://www.runoob.com/markdown/)</code></pre><p>这是一个链接<a href="https://www.runoob.com/markdown/" target="_blank" rel="noopener">链接到参考文件</a><br><a href="https://www.google.com" target="_blank" rel="noopener">google</a><br><a href="https://www.baidu.com" target="_blank" rel="noopener">baidu</a></p><h2 id="图标"><a href="#图标" class="headerlink" title="图标"></a>图标</h2><pre><code>![RUNOOB 图标](http://static.runoob.com/images/runoob-logo.png)![RUNOOB 图标](http://static.runoob.com/images/runoob-logo.png &quot;RUNOOB&quot;)</code></pre><p><img src="http://static.runoob.com/images/runoob-logo.png" alt="RUNOOB 图标"></p><p><img src="http://static.runoob.com/images/runoob-logo.png" alt="RUNOOB 图标" title="RUNOOB"></p><p>这个链接用 1 作为网址变量 <a href="http://static.runoob.com/images/runoob-logo.png" target="_blank" rel="noopener">RUNOOB</a>.<br>然后在文档的结尾为变量赋值（网址）。</p><p><img src="http://static.runoob.com/images/runoob-logo.png" width="20%"></p><h2 id="本地图片"><a href="#本地图片" class="headerlink" title="本地图片"></a>本地图片</h2><p><img src="./Markdown语法/test.jpg" alt="图片"></p><h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><pre><code>|  表头   | 表头  ||  ----  | ----  || 单元格  | 单元格 || 单元格  | 单元格 || 左对齐 | 右对齐 | 居中对齐 || :-----| ----: | :----: || 单元格 | 单元格 | 单元格 || 单元格 | 单元格 | 单元格 |</code></pre><div class="table-container"><table><thead><tr><th>表头</th><th>表头</th></tr></thead><tbody><tr><td>单元格</td><td>单元格</td></tr><tr><td>单元格</td><td>单元格</td></tr></tbody></table></div><div class="table-container"><table><thead><tr><th style="text-align:left">左对齐</th><th style="text-align:right">右对齐</th><th style="text-align:center">居中对齐</th></tr></thead><tbody><tr><td style="text-align:left">单元格</td><td style="text-align:right">单元格</td><td style="text-align:center">单元格</td></tr><tr><td style="text-align:left">单元格</td><td style="text-align:right">单元格</td><td style="text-align:center">单元格</td></tr></tbody></table></div><h2 id="keyboard"><a href="#keyboard" class="headerlink" title="keyboard"></a>keyboard</h2><pre><code>使用 &lt;kbd&gt;Ctrl&lt;/kbd&gt;+&lt;kbd&gt;Alt&lt;/kbd&gt;+&lt;kbd&gt;Del&lt;/kbd&gt; 重启电脑。</code></pre><blockquote><p>使用 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd> 重启电脑。</p></blockquote><p><strong>文本加粗</strong><br>** 正常显示星号 **</p><h2 id="数学公式"><a href="#数学公式" class="headerlink" title="数学公式"></a>数学公式</h2><pre><code>$$\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix} \mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \\\frac{\partial X}{\partial u} &amp;  \frac{\partial Y}{\partial u} &amp; 0 \\\frac{\partial X}{\partial v} &amp;  \frac{\partial Y}{\partial v} &amp; 0 \\\end{vmatrix}${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}$$</code></pre><script type="math/tex; mode=display">\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\\frac{\partial X}{\partial u} &  \frac{\partial Y}{\partial u} & 0 \\\frac{\partial X}{\partial v} &  \frac{\partial Y}{\partial v} & 0 \\\end{vmatrix}${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}</script><h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">A[方形] --&gt;B(圆角)</span><br><span class="line">    B --&gt; C&#123;条件a&#125;</span><br><span class="line">    C --&gt;|a&#x3D;1| D[结果1]</span><br><span class="line">    C --&gt;|a&#x3D;2| E[结果2]</span><br><span class="line">    F[横向流程图]</span><br></pre></td></tr></table></figure></code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">A[方形] --&gt;B(圆角)</span><br><span class="line">    B --&gt; C&#123;条件a&#125;</span><br><span class="line">    C --&gt;|a&#x3D;1| D[结果1]</span><br><span class="line">    C --&gt;|a&#x3D;2| E[结果2]</span><br><span class="line">    F[横向流程图]</span><br></pre></td></tr></table></figure><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">A[方形] --&gt; B(圆角)</span><br><span class="line">    B --&gt; C&#123;条件a&#125;</span><br><span class="line">    C --&gt; |a&#x3D;1| D[结果1]</span><br><span class="line">    C --&gt; |a&#x3D;2| E[结果2]</span><br><span class="line">    F[竖向流程图]</span><br></pre></td></tr></table></figure></code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">A[方形] --&gt; B(圆角)</span><br><span class="line">    B --&gt; C&#123;条件a&#125;</span><br><span class="line">    C --&gt; |a&#x3D;1| D[结果1]</span><br><span class="line">    C --&gt; |a&#x3D;2| E[结果2]</span><br><span class="line">    F[竖向流程图]</span><br></pre></td></tr></table></figure><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始框</span><br><span class="line">op&#x3D;&gt;operation: 处理框</span><br><span class="line">cond&#x3D;&gt;condition: 判断框(是或否?)</span><br><span class="line">sub1&#x3D;&gt;subroutine: 子流程</span><br><span class="line">io&#x3D;&gt;inputoutput: 输入输出框</span><br><span class="line">e&#x3D;&gt;end: 结束框</span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure></code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始框</span><br><span class="line">op&#x3D;&gt;operation: 处理框</span><br><span class="line">cond&#x3D;&gt;condition: 判断框(是或否?)</span><br><span class="line">sub1&#x3D;&gt;subroutine: 子流程</span><br><span class="line">io&#x3D;&gt;inputoutput: 输入输出框</span><br><span class="line">e&#x3D;&gt;end: 结束框</span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始框</span><br><span class="line">op&#x3D;&gt;operation: 处理框</span><br><span class="line">cond&#x3D;&gt;condition: 判断框(是或否?)</span><br><span class="line">sub1&#x3D;&gt;subroutine: 子流程</span><br><span class="line">io&#x3D;&gt;inputoutput: 输入输出框</span><br><span class="line">e&#x3D;&gt;end: 结束框</span><br><span class="line">st(right)-&gt;op(right)-&gt;cond</span><br><span class="line">cond(yes)-&gt;io(bottom)-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure></code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">st&#x3D;&gt;start: 开始框</span><br><span class="line">op&#x3D;&gt;operation: 处理框</span><br><span class="line">cond&#x3D;&gt;condition: 判断框(是或否?)</span><br><span class="line">sub1&#x3D;&gt;subroutine: 子流程</span><br><span class="line">io&#x3D;&gt;inputoutput: 输入输出框</span><br><span class="line">e&#x3D;&gt;end: 结束框</span><br><span class="line">st(right)-&gt;op(right)-&gt;cond</span><br><span class="line">cond(yes)-&gt;io(bottom)-&gt;e</span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">对象A-&gt;对象B: 对象B你好吗?（请求）</span><br><span class="line">Note right of 对象B: 对象B的描述</span><br><span class="line">Note left of 对象A: 对象A的描述(提示)</span><br><span class="line">对象B--&gt;对象A: 我很好(响应)</span><br><span class="line">对象A-&gt;对象B: 你真的好吗？</span><br></pre></td></tr></table></figure></code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">对象A-&gt;对象B: 对象B你好吗?（请求）</span><br><span class="line">Note right of 对象B: 对象B的描述</span><br><span class="line">Note left of 对象A: 对象A的描述(提示)</span><br><span class="line">对象B--&gt;对象A: 我很好(响应)</span><br><span class="line">对象A-&gt;对象B: 你真的好吗？</span><br></pre></td></tr></table></figure><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Title: 标题：复杂使用</span><br><span class="line">对象A-&gt;对象B: 对象B你好吗?（请求）</span><br><span class="line">Note right of 对象B: 对象B的描述</span><br><span class="line">Note left of 对象A: 对象A的描述(提示)</span><br><span class="line">对象B--&gt;对象A: 我很好(响应)</span><br><span class="line">对象B-&gt;小三: 你好吗</span><br><span class="line">小三--&gt;&gt;对象A: 对象B找我了</span><br><span class="line">对象A-&gt;对象B: 你真的好吗？</span><br><span class="line">Note over 小三,对象B: 我们是朋友</span><br><span class="line">participant C</span><br><span class="line">Note right of C: 没人陪我玩</span><br></pre></td></tr></table></figure></code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Title: 标题：复杂使用</span><br><span class="line">对象A-&gt;对象B: 对象B你好吗?（请求）</span><br><span class="line">Note right of 对象B: 对象B的描述</span><br><span class="line">Note left of 对象A: 对象A的描述(提示)</span><br><span class="line">对象B--&gt;对象A: 我很好(响应)</span><br><span class="line">对象B-&gt;小三: 你好吗</span><br><span class="line">小三--&gt;&gt;对象A: 对象B找我了</span><br><span class="line">对象A-&gt;对象B: 你真的好吗？</span><br><span class="line">Note over 小三,对象B: 我们是朋友</span><br><span class="line">participant C</span><br><span class="line">Note right of C: 没人陪我玩</span><br></pre></td></tr></table></figure><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">%% 时序图例子,-&gt; 直线，--&gt;虚线，-&gt;&gt;实线箭头</span><br><span class="line">sequenceDiagram</span><br><span class="line">    participant 张三</span><br><span class="line">    participant 李四</span><br><span class="line">    张三-&gt;王五: 王五你好吗？</span><br><span class="line">    loop 健康检查</span><br><span class="line">        王五-&gt;王五: 与疾病战斗</span><br><span class="line">    end</span><br><span class="line">    Note right of 王五: 合理 食物 &lt;br&#x2F;&gt;看医生...</span><br><span class="line">    李四--&gt;&gt;张三: 很好!</span><br><span class="line">    王五-&gt;李四: 你怎么样?</span><br><span class="line">    李四--&gt;王五: 很好!</span><br></pre></td></tr></table></figure></code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">%% 时序图例子,-&gt; 直线，--&gt;虚线，-&gt;&gt;实线箭头</span><br><span class="line">  sequenceDiagram</span><br><span class="line">    participant 张三</span><br><span class="line">    participant 李四</span><br><span class="line">    张三-&gt;王五: 王五你好吗？</span><br><span class="line">    loop 健康检查</span><br><span class="line">        王五-&gt;王五: 与疾病战斗</span><br><span class="line">    end</span><br><span class="line">    Note right of 王五: 合理 食物 &lt;br&#x2F;&gt;看医生...</span><br><span class="line">    李四--&gt;&gt;张三: 很好!</span><br><span class="line">    王五-&gt;李四: 你怎么样?</span><br><span class="line">    李四--&gt;王五: 很好!</span><br></pre></td></tr></table></figure><figure class="highlight plain"><figcaption><span>语法示例</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">    gantt</span><br><span class="line">    dateFormat  YYYY-MM-DD</span><br><span class="line">    title 软件开发甘特图</span><br><span class="line">    section 设计</span><br><span class="line">    需求                      :done,    des1, 2014-01-06,2014-01-08</span><br><span class="line">    原型                      :active,  des2, 2014-01-09, 3d</span><br><span class="line">    UI设计                     :         des3, after des2, 5d</span><br><span class="line">未来任务                     :         des4, after des3, 5d</span><br><span class="line">    section 开发</span><br><span class="line">    学习准备理解需求                      :crit, done, 2014-01-06,24h</span><br><span class="line">    设计框架                             :crit, done, after des2, 2d</span><br><span class="line">    开发                                 :crit, active, 3d</span><br><span class="line">    未来任务                              :crit, 5d</span><br><span class="line">    耍                                   :2d</span><br><span class="line">    section 测试</span><br><span class="line">    功能测试                              :active, a1, after des3, 3d</span><br><span class="line">    压力测试                               :after a1  , 20h</span><br><span class="line">    测试报告                               : 48h</span><br></pre></td></tr></table></figure><pre><code><figure class="highlight plain"><figcaption><span>语法示例</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">    gantt</span><br><span class="line">    dateFormat  YYYY-MM-DD</span><br><span class="line">    title 软件开发甘特图</span><br><span class="line">    section 设计</span><br><span class="line">    需求                      :done,    des1, 2014-01-06,2014-01-08</span><br><span class="line">    原型                      :active,  des2, 2014-01-09, 3d</span><br><span class="line">    UI设计                     :         des3, after des2, 5d</span><br><span class="line">未来任务                     :         des4, after des3, 5d</span><br><span class="line">    section 开发</span><br><span class="line">    学习准备理解需求                      :crit, done, 2014-01-06,24h</span><br><span class="line">    设计框架                             :crit, done, after des2, 2d</span><br><span class="line">    开发                                 :crit, active, 3d</span><br><span class="line">    未来任务                              :crit, 5d</span><br><span class="line">    耍                                   :2d</span><br><span class="line">    section 测试</span><br><span class="line">    功能测试                              :active, a1, after des3, 3d</span><br><span class="line">    压力测试                               :after a1  , 20h</span><br><span class="line">    测试报告                               : 48h</span><br></pre></td></tr></table></figure></code></pre><p>参考<br><a href="https://www.runoob.com/markdown/" target="_blank" rel="noopener">markdown</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Tools </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Markdown </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Knowledge List</title>
-      <link href="/2020/09/28/KnowledgeList/"/>
-      <url>/2020/09/28/KnowledgeList/</url>
-      
-        <content type="html"><![CDATA[<p><a href="https://shuoxux.github.io/2020/09/28/MachineLearning/">机器学习</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> KnowledgeList </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> KnowledgeList </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Machine Learning</title>
-      <link href="/2020/09/28/MachineLearning/"/>
-      <url>/2020/09/28/MachineLearning/</url>
-      
-        <content type="html"><![CDATA[<h1 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h1><p>机器学习分为监督学习，无监督学习，强化学习，半监督学习与主动学习。<br>无监督——聚类。<br>监督——分类、回归、标注。<br>统计学习三要素:<br>方法=模型+策略+算法</p><h2 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h2><h3 id="感知机"><a href="#感知机" class="headerlink" title="感知机"></a>感知机</h3><h3 id="K近邻"><a href="#K近邻" class="headerlink" title="K近邻"></a>K近邻</h3><h3 id="朴素贝叶斯"><a href="#朴素贝叶斯" class="headerlink" title="朴素贝叶斯"></a>朴素贝叶斯</h3><h3 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h3><h3 id="逻辑斯蒂回归与最大熵"><a href="#逻辑斯蒂回归与最大熵" class="headerlink" title="逻辑斯蒂回归与最大熵"></a>逻辑斯蒂回归与最大熵</h3><h3 id="支持向量机-核函数"><a href="#支持向量机-核函数" class="headerlink" title="支持向量机(核函数)"></a>支持向量机(核函数)</h3><h3 id="提升方法"><a href="#提升方法" class="headerlink" title="提升方法"></a>提升方法</h3><h3 id="EM算法"><a href="#EM算法" class="headerlink" title="EM算法"></a>EM算法</h3><h3 id="隐马尔可夫模型"><a href="#隐马尔可夫模型" class="headerlink" title="隐马尔可夫模型"></a>隐马尔可夫模型</h3><h3 id="条件随机场"><a href="#条件随机场" class="headerlink" title="条件随机场"></a>条件随机场</h3><h2 id="无监督学习"><a href="#无监督学习" class="headerlink" title="无监督学习"></a>无监督学习</h2><p>聚类,降维,概率模型估计,话题分析,图分析</p><h3 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h3><p>相似度,距离(闵氏距离,马氏距离,相关系数,夹角余弦)<br>类簇(类和类之间的距离)<br>层次聚类,K均值聚类<br>奇异值分解(紧奇异值分解,截断奇异值分解)</p><h3 id="主成分分析"><a href="#主成分分析" class="headerlink" title="主成分分析"></a>主成分分析</h3><p>总体,样本主成分分析</p><h3 id="潜在语义分析-LSA"><a href="#潜在语义分析-LSA" class="headerlink" title="潜在语义分析(LSA)"></a>潜在语义分析(LSA)</h3><h3 id="马尔可夫链蒙特卡洛法"><a href="#马尔可夫链蒙特卡洛法" class="headerlink" title="马尔可夫链蒙特卡洛法"></a>马尔可夫链蒙特卡洛法</h3><p>Metropolis-Hastings算法</p><h3 id="潜在迪利克雷分配"><a href="#潜在迪利克雷分配" class="headerlink" title="潜在迪利克雷分配"></a>潜在迪利克雷分配</h3><h3 id="PackRank算法"><a href="#PackRank算法" class="headerlink" title="PackRank算法"></a>PackRank算法</h3><h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1>]]></content>
-      
-      
-      <categories>
-          
-          <category> Machine Learning </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Machine Learning </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>How to Use Mendeley</title>
-      <link href="/2020/06/22/how-to-use-mendeley/"/>
-      <url>/2020/06/22/how-to-use-mendeley/</url>
-      
-        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用mendeley来写论文的一些方法。</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://wenku.baidu.com/view/f361cdbafd0a79563c1e72a6.html" target="_blank" rel="noopener">Mendeley中文入门教程</a><br><a href="https://github.com/Vopaaz/CNKI_2_BibTeX" target="_blank" rel="noopener">CNKI_2_BibTeX</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Tools </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Mendeley </tag>
-            
-            <tag> Papers </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>How to Write Papers with Markdown</title>
-      <link href="/2020/06/22/how-to-write-papers-with-markdown/"/>
-      <url>/2020/06/22/how-to-write-papers-with-markdown/</url>
-      
-        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;下面是使用markdown来写论文的一些方法，还不完善等待补充。</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.jianshu.com/p/b0ac7ae98100" target="_blank" rel="noopener">如何用Markdown写论文？</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Tools </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Markdown </tag>
-            
-            <tag> Papers </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>How to Set a Personal Blog with Hexo</title>
-      <link href="/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/"/>
-      <url>/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</url>
-      
-        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;我主要参考下面的内容依据hexo来搭建githubpages，并且用next主题优化。</p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://blog.csdn.net/weixin_39345384/article/details/80095883" target="_blank" rel="noopener">Windows下通过GitHub+Hexo搭建个人博客的步骤</a><br><a href="https://blog.csdn.net/weixin_39345384/article/details/80785373" target="_blank" rel="noopener">Hexo框架下用NexT(v7.0+)主题美化博客</a><br><a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">Markdown 教程</a><br><a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank" rel="noopener">Markdown基本语法</a><br><a href="https://www.runoob.com/w3cnote/git-guide.html" target="_blank" rel="noopener">Github 简明教程</a><br><a href="https://www.runoob.com/git/git-tutorial.html" target="_blank" rel="noopener">Git 教程</a><br><a href="https://www.jianshu.com/p/296d22275cdd" target="_blank" rel="noopener">Git和GitHub使用教程</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Tools </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Hexo </tag>
-            
-            <tag> Markdown </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-  
-  
+    </body></html>]]></content>
+  </entry>
 </search>
