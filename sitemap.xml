@@ -2,16 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://shuoxux.github.io/2020/10/04/EnsembleLearning/</loc>
+    <loc>https://shuoxux.github.io/2020/10/04/LatexMath/</loc>
     
-    <lastmod>2020-10-04T12:28:46.237Z</lastmod>
+    <lastmod>2020-10-04T12:37:08.851Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://shuoxux.github.io/2020/10/04/LatexMath/</loc>
+    <loc>https://shuoxux.github.io/2020/09/28/MachineLearning/</loc>
     
-    <lastmod>2020-10-04T07:08:21.988Z</lastmod>
+    <lastmod>2020-10-04T12:35:42.477Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/06/22/how-to-use-mendeley/</loc>
+    
+    <lastmod>2020-10-04T12:34:20.837Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/06/22/how-to-write-papers-with-markdown/</loc>
+    
+    <lastmod>2020-10-04T12:33:48.480Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/09/28/Markdown%E8%AF%AD%E6%B3%95/</loc>
+    
+    <lastmod>2020-10-04T12:32:48.083Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/10/04/EnsembleLearning/</loc>
+    
+    <lastmod>2020-10-04T12:28:46.237Z</lastmod>
     
   </url>
   
@@ -30,20 +58,6 @@
   </url>
   
   <url>
-    <loc>https://shuoxux.github.io/2020/09/28/MachineLearning/</loc>
-    
-    <lastmod>2020-09-29T11:36:48.175Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://shuoxux.github.io/2020/09/28/Markdown%E8%AF%AD%E6%B3%95/</loc>
-    
-    <lastmod>2020-09-29T06:25:15.932Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://shuoxux.github.io/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</loc>
     
     <lastmod>2020-09-29T01:49:45.726Z</lastmod>
@@ -54,20 +68,6 @@
     <loc>https://shuoxux.github.io/tags/index.html</loc>
     
     <lastmod>2020-09-28T14:10:31.156Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://shuoxux.github.io/2020/06/22/how-to-write-papers-with-markdown/</loc>
-    
-    <lastmod>2020-09-28T12:17:29.876Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://shuoxux.github.io/2020/06/22/how-to-use-mendeley/</loc>
-    
-    <lastmod>2020-09-28T12:17:18.948Z</lastmod>
     
   </url>
   
