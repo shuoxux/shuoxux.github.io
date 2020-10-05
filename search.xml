@@ -241,8 +241,7 @@
 <p>    标准AdaBoost算法适用于二分类任务，有多种推导方式，容易理解的是基于“加性模型”来最小化指数损失函数。</p>
 <blockquote>
 <hr />
-<p>输入：训练集<span class="math inline">\(D=\left\{(\boldsymbol{x}_1,y_1),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\right\}\)</span></p>
-<p>      基学习算法<span class="math inline">\(\mathfrak{L}\)</span></p>
+<p>输入：训练集<span class="math inline">\(D=\left\{(\boldsymbol{x}_1,y_1),(\boldsymbol x_2,y_2),...,(\boldsymbol x_m,y_m)\right\}\)</span>       基学习算法<span class="math inline">\(\mathfrak{L}\)</span></p>
 <p>      训练轮数<span class="math inline">\(T\)</span>.</p>
 <p>过程:</p>
 <p>1: <span class="math inline">\(\mathcal{D}=1/m\)</span>.</p>
@@ -251,7 +250,7 @@
 <p>4:  <span class="math inline">\(\epsilon=P_{\boldsymbol{x}\sim\mathcal{D}}(h_t(\boldsymbol{x})\not ={f(\boldsymbol{x})})\)</span>;</p>
 <p>5:  <span class="math inline">\(\boldsymbol{if}\ \epsilon_t&gt;0.5\ \boldsymbol{then\ break}\)</span></p>
 <p>6:  <span class="math inline">\(\alpha_t=\frac{1}{2}ln(\frac{1-\epsilon_t}{\epsilon_t})\)</span>;</p>
-<p>7:  <span class="math inline">\(\mathcal{D}_{t+1}(\boldsymbol{x})=\frac{\mathcal{D}_t(\boldsymbol{x})}{Z_t}\times \begin{cases} exp(-\alpha_t) &amp; \quad \text{if } h_t(\boldsymbol{x})=f(\boldsymbol{x}) \\ exp(\alpha_t) &amp; \quad \text{if } h_t(\boldsymbol{x})\not=f(\boldsymbol{x}) \end{cases}\)</span></p>
+<p>7:  <span class="math inline">\(\mathcal{D}_{t+1}(\boldsymbol{x})=\frac{\mathcal{D}_t(\boldsymbol{x})}{Z_t}\times \begin{cases} exp(-\alpha_t) &amp; \quad \text{if } h_t(\boldsymbol{x})=f(\boldsymbol{x}) \\ exp(\alpha_t) &amp; \quad \text{if } h_t(\boldsymbol{x})\not=f(\boldsymbol{x}) \end{cases} =\frac{\mathcal{D}_t(\boldsymbol{x})exp(-\alpha_tf(\boldsymbol{x})h_t(\boldsymbol{x}))}{Z_t}\)</span></p>
 <p>8: <span class="math inline">\(\boldsymbol{end\ for}\)</span></p>
 <p>输出：<span class="math inline">\(H(\boldsymbol{x})=sign\big(\sum^T_{t=1}\alpha_th_t(\boldsymbol{x})\big)\)</span></p>
 <hr />
@@ -279,7 +278,7 @@
 <p>平均法：简单平均法、加权平均法</p>
 <p>投票法：绝对多数投票法、相对多数投票法、加权投票法</p>
 <h2 id="reference">Reference</h2>
-<p>周志华，机器学习</p>
+<p>周志华，机器学习 <br/><a href="https://datawhalechina.github.io/pumpkin-book/#/">南瓜书PumpkinBook</a></p>
 ]]></content>
       <categories>
         <category>Machine Learning</category>
