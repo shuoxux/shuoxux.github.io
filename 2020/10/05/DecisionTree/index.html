@@ -29,7 +29,7 @@
 <meta property="og:description" content="Introduction   本篇是周志华西瓜书机器学习笔记，第四章决策树。 基本流程   决策树是基于树结构来进行决策的。   输入：训练集\(D&#x3D;\left\{(\boldsymbol{x}_1,y_1),(\boldsymbol{x}_2,y_2),...(\boldsymbol{x}_m,y_m)\right\}\)    属性集\(A&#x3D;\left\{a_1,a_2,...,a">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-05T07:53:02.000Z">
-<meta property="article:modified_time" content="2020-10-05T14:15:30.425Z">
+<meta property="article:modified_time" content="2020-10-05T14:16:42.044Z">
 <meta property="article:author" content="shuoxu">
 <meta property="article:tag" content="Machine Learning">
 <meta name="twitter:card" content="summary">
@@ -214,7 +214,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-10-05 15:53:02 / Modified: 22:15:30" itemprop="dateCreated datePublished" datetime="2020-10-05T15:53:02+08:00">2020-10-05</time>
+              <time title="Created: 2020-10-05 15:53:02 / Modified: 22:16:42" itemprop="dateCreated datePublished" datetime="2020-10-05T15:53:02+08:00">2020-10-05</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -267,7 +267,7 @@
 <p>输入：训练集<span class="math inline">\(D=\left\{(\boldsymbol{x}_1,y_1),(\boldsymbol{x}_2,y_2),...(\boldsymbol{x}_m,y_m)\right\}\)</span> <br/>   属性集<span class="math inline">\(A=\left\{a_1,a_2,...,a_d\right\}\)</span> <br/>过程：函数<span class="math inline">\(TreeGenerate(D,A)\)</span> <br/>1:生成节点node; <br/>2:<span class="math inline">\(\boldsymbol{if}D\)</span>样本全属于同一类别<span class="math inline">\(C\)</span> <span class="math inline">\(\boldsymbol{then}\)</span> <br/>3:  将node标记为<span class="math inline">\(C\)</span>类叶节点；<span class="math inline">\(\boldsymbol{return}\)</span> <br/>4:<span class="math inline">\(\boldsymbol{end\ if}\)</span> <br/>5:$ A= D <span class="math inline">\(中样本在\)</span>A<span class="math inline">\(上取值相同\)</span> $ <br/>6:  将node表计为叶节点，其类别标记为<span class="math inline">\(D\)</span>中样本数最多的类；<span class="math inline">\(\boldsymbol{return}\)</span> <br/>7:<span class="math inline">\(\boldsymbol{end\ if}\)</span> <br/>8:从<span class="math inline">\(A\)</span>中选择最优划分属性<span class="math inline">\(a_*\)</span>; <br/>9:<span class="math inline">\(\boldsymbol{for}\ a_*\)</span>的每一个值<span class="math inline">\(a_*^v\ \boldsymbol{do}\)</span> <br/>10:  为node生成一个分支；令<span class="math inline">\(D_v\)</span>表示<span class="math inline">\(D\)</span>在<span class="math inline">\(a_*\)</span>上取值为<span class="math inline">\(a_*^v\)</span>的样本子集； <br/>11:  <span class="math inline">\(\boldsymbol{if}\ D_v为空\boldsymbol{then}\)</span> <br/>12:    将分支结点标记为叶结点，其类别标记为<span class="math inline">\(D\)</span>中样本最多的类；<span class="math inline">\(\boldsymbol{return}\)</span> <br/>13:  <span class="math inline">\(\boldsymbol{else}\)</span> <br/>14:    以<span class="math inline">\(TreeGenerate(D_v,A \backslash\left\{a_*\right\})\)</span>为分支结点 <br/>15:  <span class="math inline">\(\boldsymbol{end\ if}\)</span> <br/>16:<span class="math inline">\(\boldsymbol{end\ for}\)</span> <br/>输出：以node为根节点的一棵决策树</p>
 <hr />
 </blockquote>
-<p><span class="math display">\[决策树学习基本算法\]</span></p>
+<p><br/><span class="math display">\[决策树学习基本算法\]</span></p>
 <h2 id="划分选择">划分选择</h2>
 <p>  信息增益:一般而言，信息增益越大，则意味着使用属性a来划分所获得的&quot;纯度提升&quot;越大。ID3决策树学习算法使用信息增益为准则来划分属性。 <br/>  增益率：信息增益准则对可取数值较多的属性有所偏好，增益率可减少这种偏好带来的不利影响。C4.5使用&quot;增益率&quot;来选择最优划分属性，增益率准则可对取值数目较少的属性有所偏好，C4.5先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择增益率最高的。 <br/>  基尼系数：CART决策树使用“基尼系数”(Gini index)来选择划分属性。基尼系数反应了数据集随机抽取的两个样本不一致的概率，基尼系数越小，数据集的纯度越高。</p>
 <h2 id="剪枝处理">剪枝处理</h2>
