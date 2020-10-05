@@ -29,7 +29,7 @@
 <meta property="og:description" content="Introduction   本篇是周志华西瓜书机器学习笔记，第四章决策树。 基本流程   决策树是基于树结构来进行决策的。   输入：训练集\(D&#x3D;\left\{(\boldsymbol{x}_1,y_1),(\boldsymbol{x}_2,y_2),...(\boldsymbol{x}_m,y_m)\right\}\)    属性集\(A&#x3D;\left\{a_1,a_2,...,a">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-05T07:53:02.000Z">
-<meta property="article:modified_time" content="2020-10-05T09:16:37.296Z">
+<meta property="article:modified_time" content="2020-10-05T14:11:23.168Z">
 <meta property="article:author" content="shuoxu">
 <meta property="article:tag" content="Machine Learning">
 <meta name="twitter:card" content="summary">
@@ -214,7 +214,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-10-05 15:53:02 / Modified: 17:16:37" itemprop="dateCreated datePublished" datetime="2020-10-05T15:53:02+08:00">2020-10-05</time>
+              <time title="Created: 2020-10-05 15:53:02 / Modified: 22:11:23" itemprop="dateCreated datePublished" datetime="2020-10-05T15:53:02+08:00">2020-10-05</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -269,9 +269,14 @@
 <p><br/><span class="math display">\[决策树学习基本算法\]</span></p>
 </blockquote>
 <h2 id="划分选择">划分选择</h2>
-<p>  信息增益:一般而言，信息增益越大，则意味着使用属性a来划分所获得的&quot;纯度提升&quot;越大。ID3决策树学习算法使用信息增益为准则来划分属性。\   增益率：信息增益准则对可取数值较多的属性有所偏好，增益率可减少这种偏好带来的不利影响。C4.5使用&quot;增益率&quot;来选择最优划分属性，增益率准则可对取值数目较少的属性有所偏好，C4.5先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择增益率最高的。\   基尼系数：CART决策树使用“基尼系数”(Gini index)来选择划分属性。基尼系数反应了数据集随机抽取的两个样本不一致的概率，基尼系数越小，数据集的纯度越高。</p>
+<p>  信息增益:一般而言，信息增益越大，则意味着使用属性a来划分所获得的&quot;纯度提升&quot;越大。ID3决策树学习算法使用信息增益为准则来划分属性。 <br/>  增益率：信息增益准则对可取数值较多的属性有所偏好，增益率可减少这种偏好带来的不利影响。C4.5使用&quot;增益率&quot;来选择最优划分属性，增益率准则可对取值数目较少的属性有所偏好，C4.5先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择增益率最高的。 <br/>  基尼系数：CART决策树使用“基尼系数”(Gini index)来选择划分属性。基尼系数反应了数据集随机抽取的两个样本不一致的概率，基尼系数越小，数据集的纯度越高。</p>
 <h2 id="剪枝处理">剪枝处理</h2>
-<p>  剪枝是决策树学习算法对付“过拟合”的主要手段。决策树剪枝的基本策略有“预剪枝”和“后剪枝”。\   预剪枝</p>
+<p>  剪枝是决策树学习算法对付“过拟合”的主要手段。决策树剪枝的基本策略有“预剪枝”和“后剪枝”。 <br/>  预剪枝是指在决策树生成的过程中，对每个结点在划分前先进行估计，若当前结点的划分不能带来决策树泛化性能提升，则停止划分并将当前结点标记为叶结点；可以降低过拟合地风险，减少训练时间开销和测试时间开销；基于“贪心”，有欠拟合地风险。 <br/>  后剪枝则是先从训练集生成一棵完整的决策树，然后自底向上地对非叶结点进行考察，若将该结点对应地子树替换为叶结点能带来决策树泛化性能提升，则将该子树替换为叶结点。后剪枝决策树地欠拟合风险小，泛化性能优于剪枝决策树；训练开销比较大。</p>
+<h2 id="连续与缺失值">连续与缺失值</h2>
+<p>  连续属性离散化技术；采用二分法(bi-partition)对连续属性进行处理。 <br/>  缺失值处理</p>
+<h2 id="多变量决策树">多变量决策树</h2>
+<h2 id="references">References</h2>
+<p>周志华，机器学习 <br/><a target="_blank" rel="noopener" href="https://datawhalechina.github.io/pumpkin-book/#/">南瓜书PumpkinBook</a> <br/><a target="_blank" rel="noopener" href="https://www.cnblogs.com/limitlessun/p/8505647.html#_label5">《机器学习》(周志华)西瓜书读书笔记(完结)</a></p>
 
     </div>
 
@@ -353,7 +358,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">基本流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%92%E5%88%86%E9%80%89%E6%8B%A9"><span class="nav-number">3.</span> <span class="nav-text">划分选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%AA%E6%9E%9D%E5%A4%84%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">剪枝处理</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">基本流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%92%E5%88%86%E9%80%89%E6%8B%A9"><span class="nav-number">3.</span> <span class="nav-text">划分选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%AA%E6%9E%9D%E5%A4%84%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">剪枝处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E4%B8%8E%E7%BC%BA%E5%A4%B1%E5%80%BC"><span class="nav-number">5.</span> <span class="nav-text">连续与缺失值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%8F%98%E9%87%8F%E5%86%B3%E7%AD%96%E6%A0%91"><span class="nav-number">6.</span> <span class="nav-text">多变量决策树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">7.</span> <span class="nav-text">References</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
