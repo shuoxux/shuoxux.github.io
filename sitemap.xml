@@ -2,16 +2,51 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://shuoxux.github.io/2020/10/05/SVM/</loc>
+    <loc>https://shuoxux.github.io/2020/10/04/EnsembleLearning/</loc>
     
-    <lastmod>2020-10-05T02:51:33.948Z</lastmod>
+    <lastmod>2020-10-05T02:58:47.052Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://shuoxux.github.io/2020/10/04/EnsembleLearning/</loc>
+    <loc>https://shuoxux.github.io/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</loc>
     
-    <lastmod>2020-10-05T01:31:20.718Z</lastmod>
+    <lastmod>2020-10-05T02:58:39.490Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/09/30/HowToUseGit/</loc>
+    
+    <lastmod>2020-10-05T02:58:33.143Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/06/22/how-to-use-mendeley/</loc>
+    
+    <lastmod>2020-10-05T02:58:23.065Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/06/22/how-to-write-papers-with-markdown/</loc>
+    
+    <lastmod>2020-10-05T02:58:17.059Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/10/04/LatexMath/</loc>
+    
+    <lastmod>2020-10-05T02:58:06.627Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://shuoxux.github.io/2020/10/05/SVM/</loc>
+    
+    <lastmod>2020-10-05T02:57:07.020Z</lastmod>
     
   </url>
   
@@ -23,30 +58,9 @@
   </url>
   
   <url>
-    <loc>https://shuoxux.github.io/2020/10/04/LatexMath/</loc>
-    
-    <lastmod>2020-10-04T12:37:08.851Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://shuoxux.github.io/2020/09/28/MachineLearning/</loc>
     
     <lastmod>2020-10-04T12:35:42.477Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://shuoxux.github.io/2020/06/22/how-to-use-mendeley/</loc>
-    
-    <lastmod>2020-10-04T12:34:20.837Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://shuoxux.github.io/2020/06/22/how-to-write-papers-with-markdown/</loc>
-    
-    <lastmod>2020-10-04T12:33:48.480Z</lastmod>
     
   </url>
   
@@ -58,23 +72,9 @@
   </url>
   
   <url>
-    <loc>https://shuoxux.github.io/2020/09/30/HowToUseGit/</loc>
-    
-    <lastmod>2020-09-30T08:38:15.615Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://shuoxux.github.io/2020/09/30/AttentionIsAllYouNeed/</loc>
     
     <lastmod>2020-09-30T08:15:05.335Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://shuoxux.github.io/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</loc>
-    
-    <lastmod>2020-09-29T01:49:45.726Z</lastmod>
     
   </url>
   

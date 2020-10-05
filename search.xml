@@ -216,7 +216,7 @@
 <blockquote>
 <p>git-whatchanged[1] Show logs with difference each commit introduces</p>
 </blockquote>
-<h2 id="reference">Reference</h2>
+<h2 id="references">References</h2>
 <p><a href="https://git-scm.com/">git-sem.com</a> <a href="https://git-scm.com/docs/git#_git_commands">GitDoc</a></p>
 ]]></content>
       <categories>
@@ -277,7 +277,7 @@
 <h2 id="结合策略">结合策略</h2>
 <p>平均法：简单平均法、加权平均法</p>
 <p>投票法：绝对多数投票法、相对多数投票法、加权投票法</p>
-<h2 id="reference">Reference</h2>
+<h2 id="references">References</h2>
 <p>周志华，机器学习 <br/><a href="https://datawhalechina.github.io/pumpkin-book/#/">南瓜书PumpkinBook</a></p>
 ]]></content>
       <categories>
@@ -317,7 +317,7 @@
     <url>/2020/10/04/LatexMath/</url>
     <content><![CDATA[<h2 id="introduction">Introduction</h2>
 <p>This article shows how to use latex to write math functions.</p>
-<h2 id="reference">Reference</h2>
+<h2 id="references">References</h2>
 <p><a href="https://www.latex-project.org/">latex-project.org</a></p>
 <p><a href="https://www.latex-project.org/help/documentation/amsldoc.pdf">User’s Guide for the amsmath Package (Version 2.1)</a></p>
 <p><a href="https://www.caam.rice.edu/~heinken/latex/symbols.pdf">LATEX Mathematical Symbols</a></p>
@@ -646,7 +646,7 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
     <url>/2020/06/22/how-to-write-papers-with-markdown/</url>
     <content><![CDATA[<h2 id="前言">前言</h2>
 <p> 下面是使用markdown来写论文的一些方法，还不完善等待补充。</p>
-<h2 id="reference">Reference</h2>
+<h2 id="references">References</h2>
 <p><a href="https://www.jianshu.com/p/b0ac7ae98100">如何用Markdown写论文？</a></p>
 ]]></content>
       <categories>
@@ -662,7 +662,7 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
     <url>/2020/06/22/how-to-set-a-personal-blog-with-hexo-md/</url>
     <content><![CDATA[<h2 id="前言">前言</h2>
 <p> 我主要参考下面的内容依据hexo来搭建githubpages，并且用next主题优化。</p>
-<h2 id="reference">Reference</h2>
+<h2 id="references">References</h2>
 <p><a href="https://blog.csdn.net/weixin_39345384/article/details/80095883">Windows下通过GitHub+Hexo搭建个人博客的步骤</a> <a href="https://blog.csdn.net/weixin_39345384/article/details/80785373">Hexo框架下用NexT(v7.0+)主题美化博客</a> <a href="https://www.runoob.com/markdown/md-tutorial.html">Markdown 教程</a> <a href="https://www.jianshu.com/p/191d1e21f7ed">Markdown基本语法</a> <a href="https://www.runoob.com/w3cnote/git-guide.html">Github 简明教程</a> <a href="https://www.runoob.com/git/git-tutorial.html">Git 教程</a> <a href="https://www.jianshu.com/p/296d22275cdd">Git和GitHub使用教程</a></p>
 ]]></content>
       <categories>
@@ -678,7 +678,7 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
     <url>/2020/06/22/how-to-use-mendeley/</url>
     <content><![CDATA[<h2 id="前言">前言</h2>
 <p> 下面是使用mendeley来写论文的一些方法。</p>
-<h2 id="reference">Reference</h2>
+<h2 id="references">References</h2>
 <p><a href="https://wenku.baidu.com/view/f361cdbafd0a79563c1e72a6.html">Mendeley中文入门教程</a> <a href="https://github.com/Vopaaz/CNKI_2_BibTeX">CNKI_2_BibTeX</a></p>
 ]]></content>
       <categories>
@@ -721,7 +721,7 @@ This is a test.</p>
 <p><br/>  支持向量回归容忍<span class="math inline">\(f(\boldsymbol{x})\)</span>与<span class="math inline">\(y\)</span>之间最多有<span class="math inline">\(\epsilon\)</span>的偏差，即仅当<span class="math inline">\(f(\boldsymbol{x})\)</span>与<span class="math inline">\(y\)</span>之间的差别绝对值大于<span class="math inline">\(\epsilon\)</span>时才计算损失。</p>
 <h2 id="核方法">核方法</h2>
 <p><br/>  表示定理</p>
-<h2 id="reference">Reference</h2>
+<h2 id="references">References</h2>
 <p>周志华，机器学习 <br/><a href="https://datawhalechina.github.io/pumpkin-book/#/">南瓜书PumpkinBook</a> <br/><a href="https://www.cnblogs.com/limitlessun/p/8505647.html#_label5">《机器学习》(周志华)西瓜书读书笔记(完结)</a></p>
 ]]></content>
       <categories>
