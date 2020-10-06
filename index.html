@@ -209,7 +209,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-10-06 13:40:46 / Modified: 14:19:36" itemprop="dateCreated datePublished" datetime="2020-10-06T13:40:46+08:00">2020-10-06</time>
+              <time title="Created: 2020-10-06 13:40:46 / Modified: 18:18:22" itemprop="dateCreated datePublished" datetime="2020-10-06T13:40:46+08:00">2020-10-06</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,6 +248,20 @@
       
           <h2 id="introduction">Introduction</h2>
 <p>  本篇是周志华西瓜书机器学习笔记，第十一章特征选择与稀疏学习。</p>
+<h2 id="子集搜索与评价">子集搜索与评价</h2>
+<p>  特征选择的过程必须确保不丢失重要特征。“相关特征”，“无关特征”，“冗余特征”。 <br/>  子集搜索：前向搜索，后向搜索，双向搜索，且都是“贪心”的。 <br/>  子集评价：可用信息熵评价。</p>
+<h2 id="过滤式选择">过滤式选择</h2>
+<p>  先对数据集进行特征选择,然后再训练学习器,特征选择过程与后续学习器无关.Relief(Relevant Features)是一种著名的过滤式选择方法.该方法设计了一个“相关统计量”来度量特征的重要性，适用于二分类问题，Relief-F适用于多分类问题。</p>
+<h2 id="包裹式选择">包裹式选择</h2>
+<p>  直接把最终将要使用的学习器的性能作为特征子集的评价标准.因此产生的最终学习器的性能比过滤式特征选择更好,但训练时的计算开销大得多.LVW(Las Vegas Wrapper)是一个典型的包裹式特征选择方法,它在拉斯维加斯方法框架下使用随机策略来进行子集搜索,并以最终分类器的误差为特征子集评价准则.</p>
+<h2 id="嵌入式选择与l_1正则化">嵌入式选择与<span class="math inline">\(L_1\)</span>正则化</h2>
+<p>  特征选择过程与学习器训练过程融为一体,两者在同一个优化过程中完成. <br/>  <span class="math inline">\(L_1\)</span>范数和<span class="math inline">\(L_2\)</span>范数正则化都有助于降低过拟合的风险，且点着更容易获得&quot;稀疏&quot;(sparse)解。<span class="math inline">\(L_1\)</span>正则化问题的求解可使用近端梯度下降(Proximal Gradient Descent, PGD)</p>
+<h2 id="稀疏表示与字典学习">稀疏表示与字典学习</h2>
+<p>  为普通稠密表达的样本找到合适的字典，将样本转化为合适的稀疏表示形式，从而使学习任务得以简化，模型复杂度得以降低，通常称为“字典学习”(dictionary learning)，亦称“稀疏编码”(sparse coding).</p>
+<h2 id="压缩感知compressed-sensing">压缩感知(compressed sensing)</h2>
+<p>  图像或声音的数字信号通常在时域上不具有稀疏性，但经过傅里叶变换，余弦变换，小波变换等处理后会转化为频域上的稀疏信号。压缩感知分为“感知测量”和“重构恢复”两个阶段。可利用矩阵补全(matrix completion)等方法来解决推荐系统之类的协同过滤(collaborative filtering)任务.</p>
+<h2 id="references">References</h2>
+<p>周志华，机器学习 <br/><a target="_blank" rel="noopener" href="https://datawhalechina.github.io/pumpkin-book/#/">南瓜书PumpkinBook</a> <br/><a target="_blank" rel="noopener" href="https://www.cnblogs.com/limitlessun/p/8505647.html#_label5">《机器学习》(周志华)西瓜书读书笔记(完结)</a></p>
 
       
     </div>
