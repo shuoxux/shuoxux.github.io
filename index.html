@@ -127,7 +127,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">13</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">14</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -180,6 +180,116 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://shuoxux.github.io/2020/10/06/%E9%99%8D%E7%BB%B4%E5%92%8C%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="shuoxu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuoxu's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/06/%E9%99%8D%E7%BB%B4%E5%92%8C%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">机器学习 第十章 降维和度量学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-10-06 10:37:38 / Modified: 13:38:35" itemprop="dateCreated datePublished" datetime="2020-10-06T10:37:38+08:00">2020-10-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/10/06/%E9%99%8D%E7%BB%B4%E5%92%8C%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/06/%E9%99%8D%E7%BB%B4%E5%92%8C%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="introduction">Introduction</h2>
+<p>  本篇是周志华西瓜书机器学习笔记，第四章决策树。</p>
+<h2 id="k近邻学习">k近邻学习</h2>
+<p>  k近邻(k-Nearest Neighbor, KNN)学习是一种常用的监督学习算法,工作机制为:给定测试样本,基于某种距离度量找出训练集中与其最靠近的k个训练样本,然后基于这k个&quot;邻居&quot;的信息来预测.在分类任务中使用投票法,在回归任务中使用平均法.k近邻是&quot;懒惰学习&quot;(lazy learning)的代表,此类学习技术在训练阶段仅仅是把样本保存起来,训练时间开销为零,待收到测试样本后再进行处理;相应地,在训练阶段就对样本进行学习的处理的方法,称为&quot;急切学习&quot;(eager learning).</p>
+<h2 id="低维嵌入">低维嵌入</h2>
+<p>  在高维情形下出现的数据样本稀疏,距离计算困难等问题,是所有机器学习算法共同面临的严重障碍,被称为&quot;维数灾难&quot;(curse of dimensionality),缓解维数灾难的一个重要的途径是降维(dimention reduction),即通过某种数学变换将原始高维属性空间转变为一个低维&quot;子空间&quot;(subspace).   &quot;多维缩放&quot;(Mulitiple Dimensional Scaling, MDS)是一种经典的降维方法,可以将原始空间中样本之间的距离在低维空间得以保持.</p>
+<blockquote>
+<hr />
+<p>输入:距离矩阵<span class="math inline">\(\boldsymbol{D}\in \mathbb{R}^{m\times m}\)</span>,其元素<span class="math inline">\(dist_{ij}\)</span>为样本<span class="math inline">\(\boldsymbol{x}_i\)</span>到<span class="math inline">\(\boldsymbol{x}_j\)</span>的距离; <br/>  低维空间维数<span class="math inline">\(d&#39;\)</span>. <br/>过程: <br/>1:根据式(10.7)~(10.9)计算<span class="math inline">\(dist_{i\cdot}^2\)</span>,<span class="math inline">\(dist_{\cdot j}^2\)</span>,<span class="math inline">\(dist_{\cdot \cdot}^2\)</span>; <br/>2:根据式(10.10)计算矩阵<span class="math inline">\(\boldsymbol{B}\)</span> <br/>3:对矩阵<span class="math inline">\(\boldsymbol{B}\)</span>做特征值分解; <br/>4:取<span class="math inline">\(\boldsymbol{\hat{\Lambda}}\)</span>为第<span class="math inline">\(d&#39;\)</span>个最大特征值所构成的对角矩阵,<span class="math inline">\(\boldsymbol{\tilde{V}}\)</span>为相应的特征向量矩阵. <br/>输出:矩阵<span class="math inline">\(\boldsymbol{\tilde{V}}\)</span><span class="math inline">\(\boldsymbol{\hat{\Lambda}}^{1/2}\in\mathbb{R}^{m\times d&#39;}\)</span>,每行是一个样本的低维坐标.</p>
+<hr />
+</blockquote>
+<p><span class="math display">\[MDS算法\]</span></p>
+<h2 id="主成分分析">主成分分析</h2>
+<p>  主成分分析(Principal Component Analysis, PCA)是常用的一种降维方法</p>
+<blockquote>
+<hr />
+<p>输入:样本集<span class="math inline">\(D=\left\{\boldsymbol{x}_1,\boldsymbol{x}_2,...,\boldsymbol{x}_m\right\}\)</span>; <br/>  低维空间维数<span class="math inline">\(d&#39;\)</span>. <br/>过程: <br/>1:对所有样本进行中心化:<span class="math inline">\(\boldsymbol{x_i}\leftarrow\boldsymbol{x}_i-\frac{1}{m}\sum_{i=1}^m\boldsymbol{x}_i\)</span>; <br/>2:计算样本的协方差矩阵<span class="math inline">\(\boldsymbol{X}\boldsymbol{X}^T\)</span>; <br/>3:对协方差矩阵<span class="math inline">\(\boldsymbol{X}\boldsymbol{X}^T\)</span>做特征值分解; <br/>4:取最大的<span class="math inline">\(d&#39;\)</span>个特征值所对应的特征向量<span class="math inline">\(\boldsymbol{w}_1\)</span>,<span class="math inline">\(\boldsymbol{w}_2\)</span>,...,<span class="math inline">\(\boldsymbol{w}_d&#39;\)</span> <br/>输出:投影矩阵<span class="math inline">\(\boldsymbol{W}^*=\)</span><span class="math inline">\((\boldsymbol{w}_1\)</span>,<span class="math inline">\(\boldsymbol{w}_2\)</span>,...,<span class="math inline">\(\boldsymbol{w}_d&#39;)\)</span>.</p>
+<hr />
+</blockquote>
+<p><span class="math display">\[PCA算法\]</span></p>
+<p>  低维空间和高维空间不同,因为对应于最小的<span class="math inline">\(d-d&#39;\)</span>个特征值的特征向量被舍弃了;舍弃这部分信息之后能使样本的采样密度增大,同时能够起到降噪的效果.</p>
+<h2 id="核化线性降维">核化线性降维</h2>
+<p>  非线性降维的一种常用方法,是基于核技巧对线性降维方法进行&quot;核化&quot;(kernelized).如核主成分分析(kernelized PCA, KPCA)</p>
+<h2 id="流行学习manifold-learning">流行学习(manifold learning)</h2>
+<p>  等度量映射 <br/>  局部线性嵌入</p>
+<h2 id="度量学习">度量学习</h2>
+<p>  度量学习直接尝试&quot;学习&quot;出一个合适的距离度量,方法有近邻成分分析(Neighbourhood Compnent Analysis, NCA).</p>
+<h2 id="references">References</h2>
+<p>周志华，机器学习 <br/><a target="_blank" rel="noopener" href="https://datawhalechina.github.io/pumpkin-book/#/">南瓜书PumpkinBook</a> <br/><a target="_blank" rel="noopener" href="https://www.cnblogs.com/limitlessun/p/8505647.html#_label5">《机器学习》(周志华)西瓜书读书笔记(完结)</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1516,118 +1626,6 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://shuoxux.github.io/2020/09/28/MachineLearning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="shuoxu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Shuoxu's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/28/MachineLearning/" class="post-title-link" itemprop="url">Machine Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-28 20:01:29" itemprop="dateCreated datePublished" datetime="2020-09-28T20:01:29+08:00">2020-09-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-04 20:35:42" itemprop="dateModified" datetime="2020-10-04T20:35:42+08:00">2020-10-04</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/2020/09/28/MachineLearning/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/28/MachineLearning/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="机器学习">机器学习</h1>
-<p>机器学习分为监督学习，无监督学习，强化学习，半监督学习与主动学习。 无监督——聚类。 监督——分类、回归、标注。 统计学习三要素: 方法=模型+策略+算法</p>
-<h2 id="监督学习">监督学习</h2>
-<h3 id="感知机">感知机</h3>
-<h3 id="k近邻">K近邻</h3>
-<h3 id="朴素贝叶斯">朴素贝叶斯</h3>
-<h3 id="决策树">决策树</h3>
-<h3 id="逻辑斯蒂回归与最大熵">逻辑斯蒂回归与最大熵</h3>
-<h3 id="支持向量机核函数">支持向量机(核函数)</h3>
-<h3 id="提升方法">提升方法</h3>
-<h3 id="em算法">EM算法</h3>
-<h3 id="隐马尔可夫模型">隐马尔可夫模型</h3>
-<h3 id="条件随机场">条件随机场</h3>
-<h2 id="无监督学习">无监督学习</h2>
-<p>聚类,降维,概率模型估计,话题分析,图分析</p>
-<h3 id="聚类">聚类</h3>
-<p>相似度,距离(闵氏距离,马氏距离,相关系数,夹角余弦) 类簇(类和类之间的距离) 层次聚类,K均值聚类 奇异值分解(紧奇异值分解,截断奇异值分解)</p>
-<h3 id="主成分分析">主成分分析</h3>
-<p>总体,样本主成分分析</p>
-<h3 id="潜在语义分析lsa">潜在语义分析(LSA)</h3>
-<h3 id="马尔可夫链蒙特卡洛法">马尔可夫链蒙特卡洛法</h3>
-<p>Metropolis-Hastings算法</p>
-<h3 id="潜在迪利克雷分配">潜在迪利克雷分配</h3>
-<h3 id="packrank算法">PackRank算法</h3>
-<h1 id="引用">引用</h1>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1697,7 +1695,7 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
