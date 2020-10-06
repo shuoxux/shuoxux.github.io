@@ -127,7 +127,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">14</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">15</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -184,6 +184,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://shuoxux.github.io/2020/10/06/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E4%B8%8E%E7%A8%80%E7%96%8F%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="shuoxu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shuoxu's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/06/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E4%B8%8E%E7%A8%80%E7%96%8F%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">机器学习 第十一章 特征选择与稀疏学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-10-06 13:40:46 / Modified: 14:19:36" itemprop="dateCreated datePublished" datetime="2020-10-06T13:40:46+08:00">2020-10-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/10/06/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E4%B8%8E%E7%A8%80%E7%96%8F%E5%AD%A6%E4%B9%A0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/06/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E4%B8%8E%E7%A8%80%E7%96%8F%E5%AD%A6%E4%B9%A0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="introduction">Introduction</h2>
+<p>  本篇是周志华西瓜书机器学习笔记，第十一章特征选择与稀疏学习。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://shuoxux.github.io/2020/10/06/%E9%99%8D%E7%BB%B4%E5%92%8C%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -209,7 +292,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-10-06 10:37:38 / Modified: 13:38:35" itemprop="dateCreated datePublished" datetime="2020-10-06T10:37:38+08:00">2020-10-06</time>
+              <time title="Created: 2020-10-06 10:37:38 / Modified: 14:02:17" itemprop="dateCreated datePublished" datetime="2020-10-06T10:37:38+08:00">2020-10-06</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -247,11 +330,11 @@
 
       
           <h2 id="introduction">Introduction</h2>
-<p>  本篇是周志华西瓜书机器学习笔记，第四章决策树。</p>
+<p>  本篇是周志华西瓜书机器学习笔记，第十章降维与度量学习。</p>
 <h2 id="k近邻学习">k近邻学习</h2>
 <p>  k近邻(k-Nearest Neighbor, KNN)学习是一种常用的监督学习算法,工作机制为:给定测试样本,基于某种距离度量找出训练集中与其最靠近的k个训练样本,然后基于这k个&quot;邻居&quot;的信息来预测.在分类任务中使用投票法,在回归任务中使用平均法.k近邻是&quot;懒惰学习&quot;(lazy learning)的代表,此类学习技术在训练阶段仅仅是把样本保存起来,训练时间开销为零,待收到测试样本后再进行处理;相应地,在训练阶段就对样本进行学习的处理的方法,称为&quot;急切学习&quot;(eager learning).</p>
 <h2 id="低维嵌入">低维嵌入</h2>
-<p>  在高维情形下出现的数据样本稀疏,距离计算困难等问题,是所有机器学习算法共同面临的严重障碍,被称为&quot;维数灾难&quot;(curse of dimensionality),缓解维数灾难的一个重要的途径是降维(dimention reduction),即通过某种数学变换将原始高维属性空间转变为一个低维&quot;子空间&quot;(subspace).   &quot;多维缩放&quot;(Mulitiple Dimensional Scaling, MDS)是一种经典的降维方法,可以将原始空间中样本之间的距离在低维空间得以保持.</p>
+<p>  在高维情形下出现的数据样本稀疏,距离计算困难等问题,是所有机器学习算法共同面临的严重障碍,被称为&quot;维数灾难&quot;(curse of dimensionality),缓解维数灾难的一个重要的途径是降维(dimention reduction),即通过某种数学变换将原始高维属性空间转变为一个低维&quot;子空间&quot;(subspace). <br/>  &quot;多维缩放&quot;(Mulitiple Dimensional Scaling, MDS)是一种经典的降维方法,可以将原始空间中样本之间的距离在低维空间得以保持.</p>
 <blockquote>
 <hr />
 <p>输入:距离矩阵<span class="math inline">\(\boldsymbol{D}\in \mathbb{R}^{m\times m}\)</span>,其元素<span class="math inline">\(dist_{ij}\)</span>为样本<span class="math inline">\(\boldsymbol{x}_i\)</span>到<span class="math inline">\(\boldsymbol{x}_j\)</span>的距离; <br/>  低维空间维数<span class="math inline">\(d&#39;\)</span>. <br/>过程: <br/>1:根据式(10.7)~(10.9)计算<span class="math inline">\(dist_{i\cdot}^2\)</span>,<span class="math inline">\(dist_{\cdot j}^2\)</span>,<span class="math inline">\(dist_{\cdot \cdot}^2\)</span>; <br/>2:根据式(10.10)计算矩阵<span class="math inline">\(\boldsymbol{B}\)</span> <br/>3:对矩阵<span class="math inline">\(\boldsymbol{B}\)</span>做特征值分解; <br/>4:取<span class="math inline">\(\boldsymbol{\hat{\Lambda}}\)</span>为第<span class="math inline">\(d&#39;\)</span>个最大特征值所构成的对角矩阵,<span class="math inline">\(\boldsymbol{\tilde{V}}\)</span>为相应的特征向量矩阵. <br/>输出:矩阵<span class="math inline">\(\boldsymbol{\tilde{V}}\)</span><span class="math inline">\(\boldsymbol{\hat{\Lambda}}^{1/2}\in\mathbb{R}^{m\times d&#39;}\)</span>,每行是一个样本的低维坐标.</p>
@@ -1544,88 +1627,6 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://shuoxux.github.io/2020/09/28/KnowledgeList/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="shuoxu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Shuoxu's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/28/KnowledgeList/" class="post-title-link" itemprop="url">Knowledge List</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-09-28 20:09:51 / Modified: 20:15:24" itemprop="dateCreated datePublished" datetime="2020-09-28T20:09:51+08:00">2020-09-28</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/KnowledgeList/" itemprop="url" rel="index"><span itemprop="name">KnowledgeList</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/2020/09/28/KnowledgeList/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/28/KnowledgeList/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a href="https://shuoxux.github.io/2020/09/28/MachineLearning/">机器学习</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1695,7 +1696,7 @@ ${$tep1}{\style{visibility:hidden}{(x+1)(x+1)}}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
